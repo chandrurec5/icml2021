@@ -1,0 +1,131 @@
+%%%%%%%% ICML 2021 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2021} with \usepackage[nohyperref]{icml2021} above.
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage{icml2021}
+
+% If accepted, instead use the following line for the camera-ready submission:
+%\usepackage[accepted]{icml2021}```
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Submission and Formatting Instructions for ICML 2021}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Deep Neural Networks are both layers and paths : From Alchemy To Atoms}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2021
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Chandrashekar}{s}`
+\end{icmlauthorlist}
+
+\icmlaffiliation{to}{Department of Computation, University of Torontoland, Torontoland, Canada}
+\icmlaffiliation{goo}{Googol ShallowMind, New London, Michigan, USA}
+\icmlaffiliation{ed}{School of Computation, University of Edenborrow, Edenborrow, United Kingdom}
+
+\icmlcorrespondingauthor{Cieua Vvvvv}{c.vvvvv@googol.com}
+\icmlcorrespondingauthor{Eee Pppp}{ep@eden.co.uk}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Machine Learning, ICML}
+
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+\section{Introduction}\label{sec:intro}
+An important question plaguing machine learning is:
+\begin{center}
+\textbf{\emph{Is Deep Learning Alchemy?}}
+\end{center}
+The \emph{alchemy} question can further be broken down into sub-questions as listed below. 
+
+1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?
+
+2. \emph{Generalisation:} Standard DNNs are \emph{over-parameterised}, yet, when trained on data with true labels we observe good test performance. Does understanding deep learning require rethinking generalisation? \cite{ben}
+
+3. \emph{Depth:} Approximation results show that more depth is better \cite{depth1,depth2}, i.e., deeper models can approximate more complicated target functions better than shallow models. Yet, when training on standard datasets increasing the depth beyond a point adversely affects both training and test performance \cite{resnets}. This situation can be remedied by using \emph{skip connections} giving rise to residual neural networks. However, why increasing depth beyond a point hurts standard DNNs is still not understood satisfactorily. 
+
+4. \emph{Depth vs Width:} Wider models \cite{wide1,wide2,wide3} have also been quite successful. While increasing either depth or width causes an increase in the number of model parameters, the trade-off between width and depth is not clearly understood.
+
+5. \emph{Functionality:} The roles of the basic parts namely weights and activation have not been clearly understood.
+
+6. \emph{Interpretability of Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
+
+As the alchemy question is being debated  \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens} in the machine learning community, side by side theoretical as well as empirical efforts are begin made to obtain useful insights to understand DNNs. Common recurring themes in such works are (i) \emph{simplification} procedures such as pruning which involves systemically throwing away unnecessary weights and (ii) \emph{extremisation} approaches such as studying the behaviour of DNNs say in the limit of infinite width or say in the presence of random labels. Many a times such simplification/extremisation has resulted in more intriguing results and thrown further open questions. We will now describe some of these.
+
+{Pruning} techniques have been known to reduce  the size of DNNs upto even $90\%$ without significant loss in performance \cite{prune1,prune2,prune3,prune4}. \cite{lottery} made an interesting observation that smaller networks pruned network can be re-trained to match the performance of the original unpruned network only when the pruned network is trained starting from its original initialisation. This lead to the so called \emph{lottery ticket} hypothesis, i.e., ``a randomly initialised, dense neural network contains a sub network that is initialised such that—when trained in isolation—it can match the test accuracy of the original network after training for at most the same number of iterations".
+
+Training with random labels has been an extremisation approach. \cite{ben} showed that standard DNNs can achieve zero training error even when fitting random/shuffled labels, shuffled/random pixels on standard datasets. However, when trained on data with true uncorrupted labels, they achieve good test performance. In a recent paper, \cite{randlabel} showed pre-training with random labels could result in both \emph{positive} as well as \emph{negative} effect on the speed of downstream re-training with true labels depending on 	factors such as initialisation scale and number of random classes upstream. However, \cite{randlabel} also observe that the test performance of the downstream model always degrades when the model is pre-trained with random labels. It is an open question to understand this adverse effect on test performance.
+
+Another extremisation approach is to study DNNs in the limit of infinite width. \cite{fcgp,convgp,arora2019exact,cao2019generalization} have related kernel methods to infinite width DNNs. Two important kernels associated with a (finite as well as infinite width) DNN are its \emph{conjugate kernel} derived from the output of the DNN and the so called \emph{neural tangent kernel} based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the conjugate and the neural tangent kernel converge to (their corresponding) deterministic matrices. It has been shown that training the last layer of the infinite width DNN is equivalent to a kernel method with the deterministic conjugate kernel and training  all the layers of an infinite width DNN is equivalent to a kernel method with the deterministic neural tangent kernel. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than the conjugate kernel as well as other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$. 
+
+Even though the neural tangent kernel settles the case of infinite width DNNs, there are some interesting open questions. Firstly, we need to understand why  finite width neural networks outperform their infinite width neural tangent kernel counterparts. Secondly, feature learning is believed to be the unique differentiator of DNNs and other the machine learning methods, and neural tangent kernel being a kernel method no feature learning.
+
+
+
+\textbf{Our Goal:} The goal of this paper is to champion a dual view as a pedagogical nugget of ``simple theory and simple experiments'' \cite{Aliresponse} to obtain insights about `practical' deep neural networks (DNNs). By `practical', we mean DNNs with standard architectural choices (such as fully connected, convolutional, pooling layers, use of skip connections) trained using variants of stochastic gradient descent (SGD) starting from any of the widely used randomised initialisations. By `practical', we also mean to exclude theory that addresses solely approximation/capacity related questions \cite{depth1,depth2}.
+
+The primal/dual view is succinctly put as below. 
+\begin{center}
+\begin{tabular}{ccl}
+\emph{Primal View}&:& Layer by layer.\\
+\emph{Dual View}&:& Path by path.\\
+\end{tabular}
+\end{center}
+
+Standard DNNs are \emph{over-parameterised}, so much so that, they 
+
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+%%\input{cnn}
+%%\input{supp}
+%\input{appendix}
+
+\end{document}
