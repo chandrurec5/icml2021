@@ -31,7 +31,7 @@
 \begin{document}
 
 \twocolumn[
-\icmltitle{Deep Neural Networks are both layers and paths : From Alchemy To Atoms}
+\icmltitle{Neural Tangent Kernel + Dual View : From Alchemy To Atoms}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
@@ -49,7 +49,7 @@
 \icmlsetsymbol{equal}{*}
 
 \begin{icmlauthorlist}
-\icmlauthor{Chandrashekar}{s}`
+\icmlauthor{Chandrashekar}{}
 \end{icmlauthorlist}
 
 \icmlaffiliation{to}{Department of Computation, University of Torontoland, Torontoland, Canada}
@@ -83,7 +83,7 @@ An important question plaguing machine learning is:
 \begin{center}
 \textbf{\emph{Is Deep Learning Alchemy?}}
 \end{center}
-The \emph{alchemy} question can further be broken down into sub-questions as listed below. 
+The \emph{alchemy} question can further be broken down into sub-questions/issues as listed below. 
 
 1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?
 
@@ -95,18 +95,25 @@ The \emph{alchemy} question can further be broken down into sub-questions as lis
 
 5. \emph{Functionality:} The roles of the basic parts namely weights and activation have not been clearly understood.
 
-6. \emph{Interpretability of Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
+6. \emph{Uninterpretablity of Learnt Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
 
+7. \emph{Universal approximation  vs Practical DNNs:} Results in the literature that  characterise the class of all functions representable by DNNs do not account for the fact that `practical' DNNs are trained using SGD (and variants) starting from randomly initialised weights. Further, the performance of DNNs are evaluated on standard datasets such as MNIST and CIFAR-10. Here is question so to understand the nature of the class of function that can be represented `practical' DNNs.
+
+\textbf{Neural Tangent Kernel (NTK):} Recent works have shown that DNNs in the limit of infinite width are equivalent to kernel methods \cite{ntk,fcgp,convgp,arora2019exact,cao2019generalization}. Two important kernels associated with a (finite width) DNN are its \emph{conjugate kernel} derived from the output of the DNN and the so called \emph{neural tangent kernel} (NTK) based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the conjugate and the neural tangent kernel converge to (their corresponding) deterministic matrices. It has been shown that training the last layer of the infinite width DNN is equivalent to a kernel method with the deterministic conjugate kernel and training  all the layers of an infinite width DNN is equivalent to a kernel method with the deterministic neural tangent kernel. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than the conjugate kernel as well as other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$. 
+
+\textbf{Issues with NTK:} Even though the neural tangent kernel settles the training and generalisation questions in the case of infinite width DNNs, there are some interesting open questions. Firstly, we need to understand why  finite width neural networks outperform their infinite width neural tangent kernel counterparts. Secondly, feature learning is believed to be the unique differentiator of DNNs and other the machine learning methods, and neural tangent kernel being a kernel method no feature learning.
+
+
+
+\comment{
 As the alchemy question is being debated  \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens} in the machine learning community, side by side theoretical as well as empirical efforts are begin made to obtain useful insights to understand DNNs. Common recurring themes in such works are (i) \emph{simplification} procedures such as pruning which involves systemically throwing away unnecessary weights and (ii) \emph{extremisation} approaches such as studying the behaviour of DNNs say in the limit of infinite width or say in the presence of random labels. Many a times such simplification/extremisation has resulted in more intriguing results and thrown further open questions. We will now describe some of these.
 
 {Pruning} techniques have been known to reduce  the size of DNNs upto even $90\%$ without significant loss in performance \cite{prune1,prune2,prune3,prune4}. \cite{lottery} made an interesting observation that smaller networks pruned network can be re-trained to match the performance of the original unpruned network only when the pruned network is trained starting from its original initialisation. This lead to the so called \emph{lottery ticket} hypothesis, i.e., ``a randomly initialised, dense neural network contains a sub network that is initialised such that—when trained in isolation—it can match the test accuracy of the original network after training for at most the same number of iterations".
 
 Training with random labels has been an extremisation approach. \cite{ben} showed that standard DNNs can achieve zero training error even when fitting random/shuffled labels, shuffled/random pixels on standard datasets. However, when trained on data with true uncorrupted labels, they achieve good test performance. In a recent paper, \cite{randlabel} showed pre-training with random labels could result in both \emph{positive} as well as \emph{negative} effect on the speed of downstream re-training with true labels depending on 	factors such as initialisation scale and number of random classes upstream. However, \cite{randlabel} also observe that the test performance of the downstream model always degrades when the model is pre-trained with random labels. It is an open question to understand this adverse effect on test performance.
 
-Another extremisation approach is to study DNNs in the limit of infinite width. \cite{fcgp,convgp,arora2019exact,cao2019generalization} have related kernel methods to infinite width DNNs. Two important kernels associated with a (finite as well as infinite width) DNN are its \emph{conjugate kernel} derived from the output of the DNN and the so called \emph{neural tangent kernel} based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the conjugate and the neural tangent kernel converge to (their corresponding) deterministic matrices. It has been shown that training the last layer of the infinite width DNN is equivalent to a kernel method with the deterministic conjugate kernel and training  all the layers of an infinite width DNN is equivalent to a kernel method with the deterministic neural tangent kernel. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than the conjugate kernel as well as other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$. 
 
-Even though the neural tangent kernel settles the case of infinite width DNNs, there are some interesting open questions. Firstly, we need to understand why  finite width neural networks outperform their infinite width neural tangent kernel counterparts. Secondly, feature learning is believed to be the unique differentiator of DNNs and other the machine learning methods, and neural tangent kernel being a kernel method no feature learning.
-
+}
 
 
 \textbf{Our Goal:} The goal of this paper is to champion a dual view as a pedagogical nugget of ``simple theory and simple experiments'' \cite{Aliresponse} to obtain insights about `practical' deep neural networks (DNNs). By `practical', we mean DNNs with standard architectural choices (such as fully connected, convolutional, pooling layers, use of skip connections) trained using variants of stochastic gradient descent (SGD) starting from any of the widely used randomised initialisations. By `practical', we also mean to exclude theory that addresses solely approximation/capacity related questions \cite{depth1,depth2}.
