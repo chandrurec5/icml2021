@@ -78,10 +78,21 @@
 \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 
 \begin{abstract}
-\emph{Is deep learning alchemy?} is a question that being currently debated. More than anything else, the lack of a \emph{pedagogical nugget} of ``simple experiments, simple theorems" is of concern. In this paper, we consider DNNs with rectified linear units (ReLUs). For such DNNs, we argue that two recent works namely (i) \emph{neural tangent kernel} and (ii) \emph{dual view}, combined together provide a useful pedagogical nugget.  In particular, we use dual view  to decompose the NTK into \emph{atomic} units in a manner that explains the role of weights, activations, width and depth unknown in prior literature.  We show that (i) weights: primary role of weights is to trigger the ReLU \emph{on/off} (i.e., $1/0$),  (ii) activations: each ReLU is a gate which provides a binary feature, (iii) width: stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs, (iv) depth: stacking layers depthwise gives rise to a \emph{Hadamard product} 
+We consider deep neural networks (DNNs) with rectified linear units (ReLUs). For such DNNs, we provide a pedagogical nugget by combining \emph{neural tangent kernel} (NTK) and \emph{dual view}. It is known that training a randomly initialised infinite width DNN is equivalent to a kernel method with the NTK at initialisation. Prior work exploited the gating property of ReLU and the dual view to show that when the weights and the gates are decoupled, the NTK simplifies into a neural path kernel (NPK) which is solely dependent on the information in the gates. The dual view work also showed that gates are learnt during training and learnt gates generalise better.
+
+In this paper,  we further decompose the NPK into \emph{atomic} units in a way that explains the role of weights, activations, width and depth.  We show (i) weights: primary role of weights is to trigger the ReLU \emph{on/off} (i.e., $1/0$),  (ii) activations: each ReLU is a gate which provides a binary feature, (iii) width: stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs, (iv) depth: stacking layers depthwise gives rise to a \emph{Hadamard product}. 
 %Finest atom is a ReLU, which is acts as a gate that blocks or passes its pre-activation input. Each gate is related to the hyperplane of the incoming weights, the gates in a layer give rise to a binary feature whose Gram matrix gives rise to the 
-Our analysis shows that the standard view of features being learnt in the hidden layer outputs is a red-herring, and actual feature learning happens in the gates. Our paper builds on recent work which showed that the neural tangent kernel simplifies into a neural path kernel which encodes the information in the gates.
+
+\begin{comment}
+``\emph{Is deep learning alchemy?}" is a question that is being currently debated. More than anything else, lack of \emph{pedagogical nuggets} of ``simple experiments, simple theorems" \cite{Aliresponse} is of concern. In this paper, we consider deep neural networks (DNNs) with rectified linear units (ReLUs). For such DNNs, we provide a pedagogical nugget by combining two recent works namely \emph{neural tangent kernel} and \emph{neural path kernel}. 
+
+We use dual view  to decompose the NTK into \emph{atomic} units in a way that explains the role of weights, activations, width and depth unknown in prior literature.  We show (i) weights: primary role of weights is to trigger the ReLU \emph{on/off} (i.e., $1/0$),  (ii) activations: each ReLU is a gate which provides a binary feature, (iii) width: stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs, (iv) depth: stacking layers depthwise gives rise to a \emph{Hadamard product}. 
+%Finest atom is a ReLU, which is acts as a gate that blocks or passes its pre-activation input. Each gate is related to the hyperplane of the incoming weights, the gates in a layer give rise to a binary feature whose Gram matrix gives rise to the 
+We argue that the standard view of features being learnt in the hidden layer outputs is a red-herring, and actual feature learning happens in the gates. Our work builds on recent work which used dual view to show that the NTK simplifies into a kernel which is solely dependent on the information in the gates.
+\end{comment}
 \end{abstract}
+
+
 
 \section{Introduction}\label{sec:intro}
 \subsection{Problem: Understanding Deep Neural Networks}
