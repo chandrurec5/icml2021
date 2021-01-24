@@ -1,0 +1,54 @@
+\section{Neural Path Kernel: Composite Kernel Based on sub-networks}\label{sec:npk}
+In this section, we will discuss the properties of \emph{neural path kernel} (NPK) associated with the NPFs defined in \Cref{sec:npf}. Recall that a co-ordinate of NPF can be non-zero only if the corresponding path is active. Consequently, the NPK for a pair of input examples is a similarity measure that depends on the number of paths that are active for both examples. Such common active paths are captured in a quantity denoted by $\Lambda$ (\Cref{def:cnnlambda}). The number of active paths are in turn dependent on the number of active gates in each layer, a fact that endows the NPK with a hierarchical/composite structure. Gates are the basic building blocks, and the gates in a layer for a $w$-dimensional binary feature whose kernels are the base kernels. When the layers are laid out depth-wise, we obtain a product of the base kernels. When skip connections are added, we obtain a sum of products of base kernels. And presence of convolution with pooling  provides rotational invariance. 
+
+\begin{definition}
+Define the NPK matrix to be  $H_{\Theta}\eqdef\Phi^\top_{\Theta}\Phi_{\Theta}$, where $\Phi_{\Theta}=(\phi_{x_1,\Theta},\ldots,\phi_{x_n,\Theta})\in\R^{P\times n}$ is the NPF matrix.
+\end{definition}
+\begin{comment}
+As a result, it turns out that, depending on the network architecture, the NPK has interesting structure/form. In FC-DNN, the NPK involves product of base kernels (\Cref{def:layerkernel},\Cref{lm:productkernel}) corresponding to the binary gating features of the various layers. In ResNet with $b$ skip connections there are $2^b$ sub-FC-DNNs and the NPK is a sum of the NPKs of these sub-FC-DNNs (\Cref{lm:sumofproduct}). Further, in CNNs due to weight sharing, the NPK has a rotationally invariant form (\Cref{lm:cnnnpk}). In what follows, we define the NPK matrix to be  $H_{\Theta}\eqdef\Phi^\top_{\Theta}\Phi_{\Theta}$, where $\Phi_{\Theta}=(\phi_{x_1,\Theta},\ldots,\phi_{x_n,\Theta})\in\R^{P\times n}$ is the NPF matrix.
+\end{comment}
+\begin{definition}\label{def:cnnlambda}
+ Define $\Lambda_{\Theta}(i,x,x_{s'}) \eqdef \left|\{p\in[P]\colon  \I_0(p)=i, A_{\Theta}(x_s,p)= A_{\Theta}(x_{s'},p)=1\}\right|$ to be total number of `active' paths for both $x_s$ and $x_{s'}$ that pass through input node $i$.
+\end{definition}
+%\subsection{NPK of FC-DNN: Product Kernel }
+%\input{cnpkexample}
+%\subsection{Neural Path Kernel : Similarity based on active sub-networks}
+\begin{definition}[Layer-wise Kernel]\label{def:layerkernel} Let $G_{x,\Theta}(\cdot,l)\in\R^w$ be $w$-dimensional feature of the gating values in layer $l$ for input $x\in\R^{\din}$.  Define layer-wise kernels:
+\begin{align*}
+H^{\text{lyr}}_{l,\Theta}(s,s')\eqdef\ip{G_{x_s,\Theta}(\cdot,l)G_{x_{s'},\Theta}(\cdot,l)}
+\end{align*}
+\end{definition}
+\begin{lemma}[Product Kernel]\label{lm:productkernel}
+ Let $H^{\text{fc}}$ denote the NPK of a FC-DNN, and for $D\in\R^{\din\times\din}$ be a diagonal matrix with strictly positive entries, and $u,u'\in\R^{\din}$ let $\ip{u,u'}_{D}=\sum_{i=1}^{\din}D(i)u(i)u'(i)$.
+\begin{align*}
+H^{\text{fc}}_{\Theta}(s,s')= \ip{x_s,x_{s'}}_{\Lambda(\cdot,x_s,x_{s'})}=\ip{x_s,x_s'}\Pi_{l=1}^{d-1}H^{\text{lyr}}_{l,\Theta}(s,s')\end{align*}
+\end{lemma}
+%\subsection{NPK of ResNet: Sum of Product Kernel}
+\begin{lemma}[Sum of Product Kernel]\label{lm:sumofproduct}
+Let $H^{\text{res}}_{\Theta}$ be the NPK of the ResNet, and $H^{\J}_{\Theta}$ be the NPK of the sub-FC-DNN within the ResNet obtained by ignoring those skip connections in the set $\J$. Then, \begin{align*}H^{\text{res}}_{\Theta}=\sum_{\J\in 2^{[b]}}H^{\J}_{\Theta}\end{align*}
+%\begin{align*}
+%\end{align*}
+\end{lemma}
+%\subsection{NPK of CNNs with circular convolutions: Rotational Invariance}
+\begin{comment}
+\textbf{NPK of CNN:} For the sake of concreteness, we consider a $1$-dimensional CNN with circular convolutions (see \Cref{tb:cconv}), with $\dc$ convolutional layers, followed by a \emph{global-average-pooling} (GAP) layer and $\dfc$ fully connected layers. The convolutional window size is given $\wconv<\din$, the number of output filters per convolutional layer is $w$, and the width of the FC layers is also $w$. 
+\end{comment}
+\begin{lemma}[Rotational Invariant Kernel]\label{lm:cnnnpk}
+Let $H^{\text{cnv}}_{\Theta}$ denote the NPK of a CNN, then 
+\begin{align*}
+H^{\text{cnv}}_{\Theta}(s,s')=\sum_{r=0}^{\din-1} \ip{x_s,rot(x_{s'},r)}_{\Lambda(\cdot, x_s,rot(x_{s'},r))}=\sum_{r=0}^{\din-1} \ip{rot(x_s,r),x_{s'}}_{\Lambda(\cdot, rot(x_s,r),x_{s'})}
+\end{align*}
+\end{lemma}
+\begin{comment}
+\begin{definition}
+Given a vector $x\in \R^{\din}$, and $r\in[\din-1]$ define $rot(x, r)\in \R^{\din}$ to be the circularly right shifted vector by $r$ entries,  such that $rot(x,r)(i)=x(i+r), i=1,\ldots, \din-r$, and $rot(x,r)(i)=x(i+ r-\din), i= \din-r+1, \ldots, \din$.
+\end{definition}
+\begin{lemma}[Rotational Invariant Kernel]\label{lm:cnnnpk}
+It follows that 
+\begin{align*}
+H^{\text{cnv}}_{\Theta}(s,s')=\sum_{r=0}^{\din-1} \ip{x_s,rot(x_{s'},r)}_{\Lambda(\cdot, x_s,rot(x_{s'},r))}=\sum_{r=0}^{\din-1} \ip{rot(x_s,r),x_{s'}}_{\Lambda(\cdot, rot(x_s,r),x_{s'})}
+\end{align*}
+\end{lemma}
+\end{comment}
+
+

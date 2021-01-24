@@ -30,7 +30,7 @@
 \begin{document}
 
 \twocolumn[
-\icmltitle{Neural Tangent Kernel + Duality: From Alchemy To Atoms}
+\icmltitle{Duality Simplifies Neural Tangent Kernel: From Alchemy To Atoms}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
@@ -77,133 +77,22 @@
 %\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
 \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 
-\begin{abstract}
-%The question ``\emph{is deep learning alchemy?}" mainly stems from the lack of \emph{pedagogical nuggets} that explain training, generalisation, roles of weights/activation/width/depth of even standard deep neural networks (DNNs).  We address this issue by combining \emph{neural tangent kernel} (NTK) and \emph{dual view} for DNNs with rectified linear units (ReLUs). 
-We consider deep neural networks (DNNs) with \emph{rectified linear units} (ReLUs). For such DNNs, we propose a \emph{pedagogical nugget} by combining \emph{neural tangent kernel} (NTK) and \emph{dual view}. Our aim is to explain training, generalisation, roles of weights/activation/width/depth. It is known that training a randomly initialised infinite width DNN is equivalent to a kernel method with the NTK at initialisation. Recent work based on dual view exploited the gating property of ReLU to show that when the weights and the gates are decoupled, the NTK simplifies into a neural path kernel (NPK) which is solely dependent on the information in the gates. Also, it was showed that (i) gates are learnt during training, (ii) learnt gates generalise better and (iii) most information is in the gates.\\
-We show that the NPK decomposes into \emph{atomic} units:  basic unit is the ReLU which acts as a gate; stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs; stacking layers depthwise gives rise to a \emph{Hadamard product}.
- %We show that (i) primary role of weights is to trigger the ReLU \emph{on/off} (i.e., $1/0$),  (ii)  each ReLU activation is a gate which provides a binary feature, (iii) stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs, (iv) stacking layers depthwise gives rise to a \emph{Hadamard product}. 
- Thus, the NPK of a fully connected DNN involves a product of base kernels. In the case of convolutional layers with pooling, the NPK has a rotation invariance property. And in residual networks with skip connects, the NPK has a sum of product of base kernels structure. The complete picture is as follows: training/generalisation is explained by NTK; role of weights and activations is explained by prior work on NPK; the roles of depth/width/convolutions/pooling/skip connection is explained in this paper. We support our theory via novel ablation studies inspired by the dual view.
-\end{abstract}
-
-\begin{comment}
-\begin{abstract}
-
-``\emph{Is deep learning alchemy?}" is a question that is being currently debated. The lack of \emph{pedagogical nuggets} of ``simple experiments, simple theorems" \cite{Aliresponse} that explains training, generalisation, roles of weights, activation, width and depth of standard deep neural networks (DNNs) is of concern. We consider DNNs with rectified linear units (ReLUs). For such DNNs, we provide a pedagogical nugget by combining \emph{neural tangent kernel} (NTK) and \emph{dual view}. It is known that training a randomly initialised infinite width DNN is equivalent to a kernel method with the NTK at initialisation. The dual view work exploited the gating property of ReLU to show that when the weights and the gates are decoupled, the NTK simplifies into a neural path kernel (NPK) which is solely dependent on the information in the gates. Also, it was showed that (i) gates are learnt during training, (ii) learnt gates generalise better and (iii) most information is in the gates.
-
-We use dual view  to decompose the NTK into \emph{atomic} units in a way that explains the role of weights, activations, width and depth.  We show that (i) primary role of weights is to trigger the ReLU \emph{on/off} (i.e., $1/0$),  (ii)  each ReLU activation is a gate which provides a binary feature, (iii) stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs, (iv) stacking layers depthwise gives rise to a \emph{Hadamard product}. Thus, the NPK of a fully connected DNN involves a product of base kernels. In the case of convolutional layers with pooling, the NPK has a rotation invariance property. And in residual networks with skip connects, the NPK has a sum of product of base kernels structure. The result on width, depth, convolutional architectures with pooling and residual networks are the novel contributions of this paper.
-\end{abstract}
-\end{comment}
-
-\begin{comment}
-``\emph{Is deep learning alchemy?}" is a question that is being currently debated. More than anything else, lack of \emph{pedagogical nuggets} of ``simple experiments, simple theorems" \cite{Aliresponse} is of concern. In this paper, we consider deep neural networks (DNNs) with rectified linear units (ReLUs). For such DNNs, we provide a pedagogical nugget by combining two recent works namely \emph{neural tangent kernel} and \emph{neural path kernel}. 
-
-We use dual view  to decompose the NTK into \emph{atomic} units in a way that explains the role of weights, activations, width and depth unknown in prior literature.  We show (i) weights: primary role of weights is to trigger the ReLU \emph{on/off} (i.e., $1/0$),  (ii) activations: each ReLU is a gate which provides a binary feature, (iii) width: stacking ReLUs widthwise in a layer gives rise to a base kernel which measures the \emph{average} number of triggered ReLUs, (iv) depth: stacking layers depthwise gives rise to a \emph{Hadamard product}. 
-%Finest atom is a ReLU, which is acts as a gate that blocks or passes its pre-activation input. Each gate is related to the hyperplane of the incoming weights, the gates in a layer give rise to a binary feature whose Gram matrix gives rise to the 
-We argue that the standard view of features being learnt in the hidden layer outputs is a red-herring, and actual feature learning happens in the gates. Our work builds on recent work which used dual view to show that the NTK simplifies into a kernel which is solely dependent on the information in the gates.
-\end{comment}
+\input{abstract}
+\input{intro}
+\input{ntk}
+\input{dual}
+\input{fc}
+\input{res}
+\input{conv}
+%\input{arch}
+%\input{npf}
+%\input{npk}
+%\input{decoupled}
+%\input{exp}
+%\input{related}
 
 
 
-\section{Introduction}\label{sec:intro}
-\subsection{Problem: Understanding Deep Neural Networks}
-An important question plaguing machine learning \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens} is:
-\begin{center}
-\textbf{\emph{Is Deep Learning Alchemy?}}
-\end{center}
-The \emph{alchemy} question can further be broken down into sub-questions/issues/gaps as listed below. 
-
-1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?
-
-2. \emph{Generalisation:} Standard DNNs are \emph{over-parameterised}, yet, when trained on data with true labels we observe good test performance. Does understanding deep learning require rethinking generalisation? \cite{ben}
-
-3. \emph{Depth:} Approximation results show that more depth is better \cite{depth1,depth2}, i.e., deeper models can approximate more complicated target functions better than shallow models. Yet, when training on standard datasets, increasing the depth beyond a point adversely affects both training and test performance \cite{resnets}. This situation can be remedied by using \emph{skip connections} giving rise to residual neural networks. However, why increasing depth beyond a point hurts standard DNNs is still not understood satisfactorily. 
-
-4. \emph{Depth vs Width:} Wider models \cite{wide1,wide2,wide3} have also been quite successful. While increasing either depth or width causes an increase in the number of model parameters, the trade-off between width and depth is not clearly understood.
-
-5. \emph{Functionality:} The roles of the basic parts namely weights and activation have not been clearly understood.
-
-6. \emph{Uninterpretablity of Learnt Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
-
-7. There is a gap between \emph{universal approximation results} which characterise the class of functions representable by DNNs and \emph{practical} DNNs that are trained using SGD (and variants) starting from randomly initialised weights. Further, the performance of DNNs are evaluated on standard datasets such as MNIST and CIFAR-10. 
-
-\subsection{Prior Work}
-\subsubsection{Neural Tanget Kernel}
-\begin{comment}{
-As the alchemy question is being debated  \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens} in the machine learning community, side by side theoretical as well as empirical efforts are begin made to obtain useful insights to understand DNNs. Common recurring themes in such works are (i) \emph{simplification} procedures such as pruning which involves systemically throwing away unnecessary weights and (ii) \emph{extremisation} approaches such as studying the behaviour of DNNs say in the limit of infinite width or say in the presence of random labels. Many a times such simplification/extremisation has resulted in more intriguing results and thrown further open questions. We will now describe some of these.
-
-\textbf{Pruning} techniques have been known to reduce  the size of DNNs upto even $90\%$ without significant loss in performance \cite{prune1,prune2,prune3,prune4}. \cite{lottery} made an interesting observation that smaller networks pruned network can be re-trained to match the performance of the original unpruned network only when the pruned network is trained starting from its original initialisation. This lead to the so called \emph{lottery ticket} hypothesis, i.e., ``a randomly initialised, dense neural network contains a sub network that is initialised such that—when trained in isolation—it can match the test accuracy of the original network after training for at most the same number of iterations".
-
-\textbf{Random Labels:} Training with random labels has been an extremisation approach. \cite{ben} showed that standard DNNs can achieve zero training error even when fitting random/shuffled labels, shuffled/random pixels on standard datasets. However, when trained on data with true uncorrupted labels, they achieve good test performance. In a recent paper, \cite{randlabel} showed pre-training with random labels could result in both \emph{positive} as well as \emph{negative} effect on the speed of downstream re-training with true labels depending on 	factors such as initialisation scale and number of random classes upstream. However, \cite{randlabel} also observe that the test performance of the downstream model always degrades when the model is pre-trained with random labels. It is an open question to understand this adverse effect on test performance.
-}
-
-{\textbf{Neural Tangent Kernel (NTK):} Recent works have shown that DNNs in the limit of infinite width are equivalent to kernel methods \cite{ntk,fcgp,convgp,arora2019exact,cao2019generalization}. Two important kernels associated with a (finite width) DNN are its \emph{conjugate kernel} derived from the output of the DNN and the so called \emph{neural tangent kernel} (NTK) based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the conjugate and the neural tangent kernel converge to (their corresponding) deterministic matrices. It has been shown that training the last layer of the infinite width DNN is equivalent to a kernel method with the deterministic conjugate kernel and training  all the layers of an infinite width DNN is equivalent to a kernel method with the deterministic neural tangent kernel. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than the conjugate kernel as well as other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$. }
-\end{comment}
-
-Recent works have shown that DNNs in the limit of infinite width are equivalent to kernel methods \cite{ntk,fcgp,convgp,arora2019exact,cao2019generalization}. An important kernel associated with a (finite width) DNN is the so called \emph{neural tangent kernel} (NTK) based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the neural tangent kernel converges to a limiting deterministic matrix. Hence, training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$.
-
-\textbf{Issues with NTK:} Even though the neural tangent kernel settles the training and generalisation questions in the case of infinite width DNNs, there are some interesting open questions. Firstly, we need to understand why  finite width neural networks outperform their infinite width neural tangent kernel counterparts. Secondly, it is not known why increasing the depth till a point makes the performance of the NTK also better.  %Thirdly, it is also not know why NTK corresponding to model with pooling performs better than models without pooling. Finally, feature learning is believed to be the unique differentiator of DNNs and other the machine learning methods, and neural tangent kernel being a kernel method has no feature learning.
-
-\subsubsection{Duality and Neural Path Kernel}
-Duality is of two kinds (a) \emph{network duality} and (b) \emph{weight duality}. Network duality says that DNNs with ReLU are both \emph{layers as well as paths}, and that the output of a DNN can be expressed as a summation of contribution of individual paths. For an input $x\in\R^{d_{\text{in}}}$, a path $p$'s contribution is equal $x(p)A_{\Theta}(p)v_{\Theta}(p)$, where $\Theta$ stands for network weights (i) $x(p)\in\R$ is the signal at the input node, (ii) $A_{\Theta}(p)$ is a binary feature which is $1$ if all the units in the path are \emph{triggered} and (iii) $v_{\Theta}(p)$ is the product of weights in the path. The weight duality is the observation that the weights $\Theta$ are responsible for both $A_{\Theta}$ and $v_{\Theta}$. 
-
-
-We use dual view as a pedagogical nugget of ``simple theory and simple experiments'' \cite{Aliresponse} to obtain insights about `practical' deep neural networks (DNNs). The primal/dual view can be succinctly put as below. 
-\begin{center}
-\begin{tabular}{p{1cm}p{6cm}}
-\emph{Primal:} & DNNs are composed of layers, and the output is obtained by proceeding layer by layer.\\
-\emph{Dual:}& DNNs are composed of paths, and the output is obtained as a summation of path contributions.\\
-\end{tabular}
-\end{center}
- The dual view was exploited by \cite{npk} in the case of DNNs with ReLU activations. A special property of a ReLU is that it can also be seen as a gate/mask that blocks or allows its pre-activation input. 
-{Using this gating property, the output of the DNN is expressed as summation of contribution of individual paths. Each path's contribution is equal to the product of the gates and weights in the path. The product gates are encodes in a neural path feature (NPF) and the product of weights are stored in a neural path value (NPV). }
-
-\begin{center}
-\includegraphics[scale=0.3]{figs/step1.pdf}
-%\includegraphics[scale=0.3]{figs/step1-center.pdf}
-\end{center}
-
-
-\begin{center}
-\includegraphics[scale=0.3]{figs/step2.pdf}
-\end{center}
-
-
-{By `practical', we mean DNNs with standard architectural choices (such as fully connected, convolutional, pooling layers, use of skip connections) trained using variants of stochastic gradient descent (SGD) starting from any of the widely used randomised initialisations. By `practical', we also mean to exclude theory that addresses solely approximation/capacity related questions \cite{depth1,depth2}.
-}
-
-
-\subsection{Our Contributions}
-
-
-
-\begin{center}
-\includegraphics[scale=0.3]{figs/step4.pdf}
-\end{center}
-
-\begin{center}
-\includegraphics[scale=0.3]{figs/step3.pdf}
-\end{center}
-
-
-\subsection{Alchemy To Atoms:  Duality decomposes NTK }
-\begin{center}
-\textbf{\emph{Is Deep Learning Alchemy?}}
-\end{center}
-\begin{comment}
-The neural tangent kernel (NTK) is defined using gradient of the DNN with respect to its weights, and it is known that training a randomly initialised infinite width DNN is equivalent to a kernel method with the NTK (i.e., infinite width limit of NTK) at initialisation. The dual view says that the DNN can broken down into paths, and output can be expressed as a summation of individual path contributions. Thus, the weights are responsible for both \emph{activating} a given path (by turning \emph{on} the ReLUs in the path) as well as \emph{amplifying} the signal at the input node of the path.
-\end{comment}
-
-\begin{comment}
-\emph{Is deep learning alchemy?} The reason why this question is asked 
-It is known that infinite width deep neural networks trained using gradient descent are equivalent to a kernel method using a fixed kernel matrix called the neural tangent kernel. A recent work has shown that in the case of DNNs with rectified linear units (ReLU), 
- The answer is \emph{no}. 
-We look at deep neural networks (DNNs) with rectified linear unit (ReLU) activations. Recent works have connected, 
- which have two kinds of dualities (a) \emph{network duality} and (b) \emph{weight duality}. Network duality says that DNNs with ReLU are both \emph{layers as well as paths}, and that the output can be expressed as a summation of contribution of individual paths. The weight duality says that the weights are responsible for both \emph{activating} a given path (by turning \emph{on} the ReLUs in the path) as well as \emph{amplifying} the signal at the input node of the path.
-
-We use \emph{duality} as a \emph{pedagogical nugget} to argue that deep learning is not \emph{alchemical} but can be \emph{atomised}, i.e., hierarchically broken down into of simpler units. At most basic level are the ReLUs which store the binary features (\emph{on/off}). Each layer corresponds to a \emph{base kernel} which measures the \emph{average} number of ReLUs `on' in that layer for a given pair input examples. While width gives averaging in the base kernel, depth gives rise to a \emph{product of base kernels}.
-
-
-\end{comment}
 
 
 \bibliographystyle{plainnat}

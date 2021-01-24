@@ -1,0 +1,78 @@
+\section{Numerical Experiments}\label{sec:exp} 
+We  now show via experiments that gates indeed play a central role in deep learning. For this we use the DGN setup (\Cref{fig:ablation}) to create models in the $4$ regimes namely DL, FL, FR-II and FR-DI. In each of the $4$ regimes, we create  combinatorially many models via a) permutation of the layers when the copied from the feature to the value network, and b) setting the input to the value network to $\mathbf{1}$ (in training and testing), i.e., a tensor with all its entries to be $1$. We observe that in all the $4$ regimes, the models are robust to the combinatorial variations.
+
+\textbf{Setup:} Datasets are MNIST and CIFAR-10. For CIFAR-10, we use \Cref{fig:ablation} with $3\times 3$  windows and $128$ filters in each layer. For MNIST, we use FC instead of the convolutional layers.  All the FC-DNNs and CNNs are trained with `\emph{Adam}'  [\citenum{adam}] (step-size $=3\cdot 10^{-4}$ , batch size $=32$). A ResNet called \emph{DavidNet} [\citenum{davidnet}] was trained with \emph{SGD} ( step-size $=0.5$, batch size $=256$).  We use $\beta=10$.% in the DL regime.
+
+\textbf{Reporting of Statistics:} The results are summarised in \Cref{fig:ablation}. For FC-DNN and CNN, in each of the $4$ regimes, we train $48= 2 (\xv=x / \xv=\mathbf{1}) \times 24(\text{layer permutations})$ models. Each of these models are trained to almost $100\%$ accuracy and the test performance is taken to be the best obtained in a given run. Each of the $48$ models is run only once. For the ResNet, we train only two model for each of the $4$ regimes ( without permuting the layers, but with image as well as `all-ones' input variation) and here each mode is run $5$ times. %In all the cases the mean and deviation are reported.
+\begin{comment}
+\begin{figure}
+\begin{minipage}{0.69\columnwidth}
+\small
+\begin{tabular}{|c|c|c|c|}\hline
+& MNIST (FC)& CIFAR-10 (CNN) & CIFAR-10 (ResNet)\\\hline
+%FR-II& $94.10\pm0.27\%$ & $67.53\pm0.73\%$\\\hline
+%FR-DI& $94.06\pm0.25\%$ & $67.6\pm0.74\%$\\\hline
+%DL& $98.14\pm0.07\%$ & $77.59\pm0.59\%$\\\hline
+%FL& $98.62\pm0.05\%$ & $79.37\pm0.29\%$\\\hline
+%ReLU& $\%$ & $\%$\\\hline
+FR-II& $94.1\pm0.3\%$ & $67.5\pm0.7\%$ &$89.8\pm0.1\%$\\\hline
+FR-DI& $94.1\pm0.3\%$ & $67.6\pm0.7\%$& $89.8\pm0.2\%$ \\\hline
+DL& $98.1\pm0.1\%$ & $77.6\pm0.6\%$& $92.4\pm0.1\%$ \\\hline
+FL& $98.6\pm0.1\%$ & $79.4\pm0.3\%$& $92.5\pm0.5\%$\\\hline
+ReLU& $98.5\pm0.1\%$ & $80.4\pm0.3\%$& $93.1\pm0.1\%$\\\hline
+\end{tabular}
+\end{minipage}
+\begin{minipage}{0.3\columnwidth}
+\centering
+\includegraphics[scale=0.15]{visual-iclr/images/horse.png}
+\includegraphics[scale=0.15]{visual-iclr/images/randinput.png}
+\end{minipage}
+\caption{Test accuracy on MNIST, CIFAR-10. }
+\label{fig:results}
+\end{figure}
+\end{comment}
+%\subsection{Gate Learning: A refined view of feature learning}
+%\textbf{Conventional Feature Learning:} Hidden features are learnt in the penultimate layer and the final layer is a linear model in these hidden features. \\
+%\textbf{Gate Learning:} The gates are the fundamental units responsible for hidden features (encoded as NPF), and NPV is the weight.We now present evidence that supports gate learning.
+
+%We now discuss the experimental results in detail.\\
+\input{ablation}
+$\bullet$ \textbf{Result Discussion:}  Recall that in regimes FR-II and FR-DI the gates are fixed and random, and only $\Tv$ are trained. In DL regime, both $\Tf$ and $\Tv$ are trained, and FL regime $\Tf$ is pre-trained and fixed, and only $\Tv$ is trained. In the following discussion, we compare the performance of the models in various regimes, along with the performance of CNTK of \cite{arora2019exact} ($77.43\%$ in CIFAR-10) and the performance of standard DNN with ReLU.  The main observations are listed below (those by \cite{ch2020neural} are also revisited for the sake of completeness). 
+
+\indent\quad $1.$ \emph{Decoupling:} There is no performance difference between FR-II and FR-DI.% i.e., the decoupling the gates from the weights did not affect the performance in practice. 
+Further, decoupled learning of gates (DL) performs significantly better than fixed random gates (FR), and the gap between standard DNN with ReLU and DL is less than $3\%$. This marginal performance loss seems to be worthy trade off for fundamental insights of \Cref{th:main} under the decoupling assumption.
+
+
+\indent\quad $2.$ \emph{Recovery:} The fixed learnt regime  (FL) shows that using the gates of a pre-trained ReLU network, performance can be recovered by training the NPV. Also, by interpreting the input dependent component of a model to be the features and the input independent component to be the weights, it makes sense to look at the gates/NPFs as the hidden features and NPV as the weights.% (which can be re-trained).
+
+\indent\quad $3.$ \emph{Random Gates:} FR-II does perform well in all the experiments (note that for a $10$-class problem, a random classifier would achieve only $10\%$ test accuracy). Given the observation that the gates are the true features, and the fact that is no learning in the gates in the fixed regime, and the performance of fixed random gates can be purely attributed to the in-built structure.
+
+\indent\quad $4.$ \emph{Gate Learning:} We group the models into three sets where $S_1=\{$ ReLU, FL , DL$\}$, $S_2=\{$ FR$\}$ and $S_3=\{$ CNTK $\}$, and explain the difference in performance due to gate learning.
+ $S_2$ and $S_3$ have no gate learning. However,  $S_3$ due to its infinite width has better averaging resulting in a well formed kernel and hence performs better than $S_2$ which is a finite width. Thus, the difference between $S_2$ and $S_3$ can be attributed to finite versus infinite width. Both $S_1$ and $S_2$ are finite width, and hence, conventional feature learning happens in both $S_1$ and $S_2$, but, $S_1$ with gate learning is better ($77.5\%$ or above in CIFAR-10) than $S_2$ ($67\%$ in CIFAR-10) with no gate learning. Thus neither finite width, nor the conventional feature learning explain the difference between $S_1$ and $S_2$. Thus, `gate learning' discriminates the regimes $S_1, S_2$ and $S_3$ better than the conventional feature learning view.
+
+\indent\quad $5.$ \emph{Permutation and Input Invariance:} The performance (in all the $4$ regimes) is  robust to `all-ones' inputs. Note that in the `all-ones' case, the input information affects the models only via the gates. Here, all the entries of the input Gram matrix are identical, and the NPK depends only on $\Lambda$, which is the measure of sub-network active simultaneously for the various input pairs. The performance (in all the $4$ regimes) is also robust to permutation of the layers. This can be attributed to the product $\Pi_{l=1}^{(d-1)} H^{\text{lyr}}_{l,\Theta}$ of the layer level base kernels being order invariant.
+
+\indent\quad $6.$ \emph{Visualisation:} \Cref{fig:permute} compares the hidden layer outputs of a standard DNN with ReLU with $4$ layers, and that of a DGN which copies the gates from the standard DNN, but, reverses the gating masks when applying to the value network. Also, the value network of the DGN was provided with a fixed random input (as shown in \Cref{fig:permute}). Both the models achieved about $80\%$ test accuracy, an otherwise surprising outcome, yet, as per the theory developed in this paper, a random input to the value network should not have much effect on performance, and this experiment confirms the same.
+\input{visual}
+
+\begin{comment}
+\FloatBarrier
+\begin{figure}[h]
+\begin{minipage}{0.68\textwidth}
+\resizebox{\textwidth}{!}{
+\includegraphics[scale=0.5]{figs/ablation-six.png}
+}
+\end{minipage}
+\begin{minipage}{0.28\textwidth}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|l|l|}\hline
+Regimes & CIFAR-10\\\hline
+FR-DI & $66.9\pm0.9$\\\hline
+DL & $78.5\pm1.7$\\\hline
+FL & $81.3\pm1.0$\\\hline
+\end{tabular}
+}
+\end{minipage}
+\label{fig:ablation2}
+\end{figure}
+\end{comment}

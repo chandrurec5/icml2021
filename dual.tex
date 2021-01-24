@@ -1,0 +1,64 @@
+\section{Dual View: Simplifying the NTK}
+\begin{comment}
+Rewriting everything in terms of gates.
+Simple Theory: Kernel depends on only gates. NTK = NPK
+
+Simple Experiments: Instead of designing another kernel method based on NPK we have 2 choices i) design another kernel ii) use the observation to more simple experiments. that NPK Keep experimenting with various gating patterns.
+
+\end{comment}
+\subsection{Neural Path Features and Value}
+
+\subsection{Neural Path Kernel and Correlation of Sub-Networks}
+
+\subsection{Simple Experimental Setup: Deep Gated Networks}
+
+\subsection{Interpreting Gradient Flow}
+
+\subsection{Simple Theorem: NTK = constant $\times$ NPK}
+
+
+\subsection{Role of Weights and Activations}
+
+\begin{comment}
+
+Meaningful etc etc statement here.
+\emph{S2 (Paths):} The output can be written as a summation of individual path contributions which is equal to the product of the signal at the input node, the gates ($0/1$ values) in the path and the weights in the path.
+
+\emph{S1 (Role of Activations):} The ReLUs have special \emph{gating} property, that is, they can an also be thought of as gates which either block or allow their pre-activation input depending on whether its \emph{on/off} (i.e., $01/$) state. 
+
+
+
+\emph{S3 (Role of Weights):} The weights play a \emph{dual role}. The primary role is to trigger the gates, and the secondary role is signal amplification.
+
+\emph{S4 (Decoupling):} The gates and weights can be decoupled, i.e., one can treat the gates as \emph{masks} applied external to the network. The information in the gates is encoded in a \emph{neural path feature} (NPF) and the information in the weights is encoded in a \emph{neural path value} (NPV). The output of the network is then equal to the inner product of the NPF and NPV.
+
+\emph{S5 (NTK = constant $\times$ NPK): } When the gates and weights are decomposed, the NTK  is a summation of two kernels: (i) first kernel corresponds to learning values for a fixed gating pattern, and (ii) second kernel corresponds to learning of the gating pattern itself. Further, in the case when the gates are fixed (not allowed to change), the NTK is equal (up to a scaling constant) the neural path kernel (NPK), the Gram matrix of the NPFs.
+
+\emph{S6 (Interpretability): } The NPK measures similarity between two inputs in terms of the active sub-network common for input pairs.
+
+\emph{S7 (Gate Learning): }The gates are learnt during training, and learnt gates generalise better than random gates at initialisation. Further, most information is in the gates, that is, if we have the gates, then NPV can be trained from scratch without loss of performance. Also, learning in gates is the reason why finite width DNNs perform better than infinite width NTK.
+\end{comment}
+\begin{comment}
+Duality is of two kinds (a) \emph{network duality} and (b) \emph{weight duality}. Network duality says that DNNs with ReLU are both \emph{layers as well as paths}, and that the output of a DNN can be expressed as a summation of contribution of individual paths. For an input $x\in\R^{d_{\text{in}}}$, a path $p$'s contribution is equal $x(p)A_{\Theta}(p)v_{\Theta}(p)$, where $\Theta$ stands for network weights (i) $x(p)\in\R$ is the signal at the input node, (ii) $A_{\Theta}(p)$ is a binary feature which is $1$ if all the units in the path are \emph{triggered} and (iii) $v_{\Theta}(p)$ is the product of weights in the path. The weight duality is the observation that the weights $\Theta$ are responsible for both $A_{\Theta}$ and $v_{\Theta}$. 
+
+
+We use dual view as a pedagogical nugget of ``simple theory and simple experiments'' \cite{Aliresponse} to obtain insights about `practical' deep neural networks (DNNs). The primal/dual view can be succinctly put as below. 
+\begin{center}
+\begin{tabular}{p{1cm}p{6cm}}
+\emph{Primal:} & DNNs are composed of layers, and the output is obtained by proceeding layer by layer.\\
+\emph{Dual:}& DNNs are composed of paths, and the output is obtained as a summation of path contributions.\\
+\end{tabular}
+\end{center}
+
+
+ The dual view was exploited by \cite{npk} in the case of DNNs with ReLU activations. A special property of a ReLU is that it can also be seen as a gate/mask that blocks or allows its pre-activation input. 
+{Using this gating property, the output of the DNN is expressed as summation of contribution of individual paths. Each path's contribution is equal to the product of the gates and weights in the path. The product gates are encodes in a neural path feature (NPF) and the product of weights are stored in a neural path value (NPV). }
+
+
+
+
+{By `practical', we mean DNNs with standard architectural choices (such as fully connected, convolutional, pooling layers, use of skip connections) trained using variants of stochastic gradient descent (SGD) starting from any of the widely used randomised initialisations. By `practical', we also mean to exclude theory that addresses solely approximation/capacity related questions \cite{depth1,depth2}.
+}
+
+\end{comment}
+

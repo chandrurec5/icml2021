@@ -1,0 +1,30 @@
+\section{Neural Tanget Kernel: Training and Generalisation of Infinite Width DNN}
+\begin{comment}{
+As the alchemy question is being debated  \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens} in the machine learning community, side by side theoretical as well as empirical efforts are begin made to obtain useful insights to understand DNNs. Common recurring themes in such works are (i) \emph{simplification} procedures such as pruning which involves systemically throwing away unnecessary weights and (ii) \emph{extremisation} approaches such as studying the behaviour of DNNs say in the limit of infinite width or say in the presence of random labels. Many a times such simplification/extremisation has resulted in more intriguing results and thrown further open questions. We will now describe some of these.
+
+\textbf{Pruning} techniques have been known to reduce  the size of DNNs upto even $90\%$ without significant loss in performance \cite{prune1,prune2,prune3,prune4}. \cite{lottery} made an interesting observation that smaller networks pruned network can be re-trained to match the performance of the original unpruned network only when the pruned network is trained starting from its original initialisation. This lead to the so called \emph{lottery ticket} hypothesis, i.e., ``a randomly initialised, dense neural network contains a sub network that is initialised such that—when trained in isolation—it can match the test accuracy of the original network after training for at most the same number of iterations".
+
+\textbf{Random Labels:} Training with random labels has been an extremisation approach. \cite{ben} showed that standard DNNs can achieve zero training error even when fitting random/shuffled labels, shuffled/random pixels on standard datasets. However, when trained on data with true uncorrupted labels, they achieve good test performance. In a recent paper, \cite{randlabel} showed pre-training with random labels could result in both \emph{positive} as well as \emph{negative} effect on the speed of downstream re-training with true labels depending on 	factors such as initialisation scale and number of random classes upstream. However, \cite{randlabel} also observe that the test performance of the downstream model always degrades when the model is pre-trained with random labels. It is an open question to understand this adverse effect on test performance.
+}
+
+{\textbf{Neural Tangent Kernel (NTK):} Recent works have shown that DNNs in the limit of infinite width are equivalent to kernel methods \cite{ntk,fcgp,convgp,arora2019exact,cao2019generalization}. Two important kernels associated with a (finite width) DNN are its \emph{conjugate kernel} derived from the output of the DNN and the so called \emph{neural tangent kernel} (NTK) based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the conjugate and the neural tangent kernel converge to (their corresponding) deterministic matrices. It has been shown that training the last layer of the infinite width DNN is equivalent to a kernel method with the deterministic conjugate kernel and training  all the layers of an infinite width DNN is equivalent to a kernel method with the deterministic neural tangent kernel. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than the conjugate kernel as well as other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$. }
+\end{comment}
+
+Recent works have shown that DNNs in the limit of infinite width are equivalent to kernel methods \cite{ntk,fcgp,convgp,arora2019exact,cao2019generalization}. An important kernel associated with a (finite width) DNN is the so called \emph{neural tangent kernel} (NTK) based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the neural tangent kernel converges to a limiting deterministic matrix. Hence, training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$.
+
+\textbf{Issues with NTK:} Even though the NTK settles the training and generalisation questions in the case of infinite width DNNs, there are some interesting open questions. Firstly, we need to understand why  finite width neural networks outperform their infinite width neural tangent kernel counterparts. Secondly, it is not known why increasing the depth till a point makes the performance of the NTK also better.  %Thirdly, it is also not know why NTK corresponding to model with pooling performs better than models without pooling. Finally, feature learning is believed to be the unique differentiator of DNNs and other the machine learning methods, and neural tangent kernel being a kernel method has no feature learning.
+
+\begin{table*}[t]
+\centering
+\begin{tabular}{|p{2cm}|p{7cm}|p{7cm}|}\hline
+&Primal & Dual \\\hline
+Output& Layer by Layer & Summation of paths\\\hline
+ReLU& A non-linearity  & gating property\\\hline
+Weights& nothing more than tunable parameters  & primary: triggers gates; secondary: signal amplification\\\hline
+Depth& deeper nesting leads to more complex functions & product of base kernels\\\hline
+Width& none & averaging\\\hline
+Convolution + Pooling&  Rotation invariance in hidden layer output & Rotation invariance of kernel\\\hline
+Skips&  passes residual error & Sum of product kernel\\\hline
+\end{tabular}
+\end{table*}
+
