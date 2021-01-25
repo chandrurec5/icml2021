@@ -1,4 +1,14 @@
-\section{Dual View: Simplifying the NTK}
+\section{Duality: DNNs are both layers as well as paths}
+In this paper, we look at DNNs with ReLU. A special property of ReLU is that it is also a gate which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. A consequence of the gating property is \emph{duality}: DNNs are layers as well as paths. A path starts at an input node, passes through gates and weights and ends at the output node and the output can be expressed as a summation of individual path contributions. \cite{npk} used duality to separate the gates as masks from the weights and argued (via experiments and theory) that \emph{gates of a DNN alone is enough to obtain power insights}. The key experimental and theoretical results are summarised in the next two points.
+
+1. \textbf{Experimental:} Using a deep gate network to decouple the gates as masks from the weights, it was shown that  (i) gates are learnt during training, (ii) learnt gates generalise better, (iii) most information is in the gates, i.e., with learnt gates as masks the weights can be reset and retrained without significant loss in test accuracy (iv) learning in gates is the reason why finite width DNNs perform better than infinite width NTK.
+
+
+2.  \textbf{Theoretical:}  When the gates are decoupled from weights, the NTK is a summation of two kernels, i.e., NTK = $\text{NTK}^{\text{fixed-gate}}+ \text{NTK}^\text{gate-learning}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel that corresponds to learning the wights keeping the gates fixed and $\text{NTK}^\text{gate-learning}$ is the kernel corresponds to learning of the gates themselves. Main theorem shows that the $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), which measures the similarity of a given pair of input examples in terms of the size of sub-network that is active\footnote{Active sub-network comprises of the gates which are \emph{on} (i.e., $1$) and the weights connecting such gates.} simultaneously for both the input examples.  
+
+
+Since we will be using the dual view, we now provide a brief summary of the same.
+
 \begin{comment}
 Rewriting everything in terms of gates.
 Simple Theory: Kernel depends on only gates. NTK = NPK
@@ -6,18 +16,47 @@ Simple Theory: Kernel depends on only gates. NTK = NPK
 Simple Experiments: Instead of designing another kernel method based on NPK we have 2 choices i) design another kernel ii) use the observation to more simple experiments. that NPK Keep experimenting with various gating patterns.
 
 \end{comment}
-\subsection{Neural Path Features and Value}
+\subsection{Neural Path Features and Value: Fully Connected}
+\FloatBarrier
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.32]{figs/paths.pdf}
+\end{figure}
+A path starts from an input node, passes through exactly one weight and one hidden node in each layer and ends at the output node. We have a total of $P=\din w^{(d-1)}$ paths. We assume that there is a natural enumeration of the paths, and denote the set of all paths by $[P]$.
+
+\begin{definition}\label{def:nps} Let $x\in\R^{\din}$ be the input to the DNN. For this input, 
+
+(i)  $A_{\Theta}(x,p)\stackrel{def}{=}\Pi_{l=1}^{d-1} G_{x,\Theta}(l,p)$ is the activity of a path.
+
+(ii)  $\phi_{x,\Theta}\stackrel{def}=\left(x(\I_0(p))A_{\Theta}(x,p) ,p\in[P]\right)\in\R^P$ is the {neural path feature} (NPF).
+
+(iii)  $v_{\Theta}\stackrel{def}=\left(\Pi_{l=1}^d \theta(l,p),p\in[P]\right)\in\R^P$ is the {neural path value} (NPV).
+\end{definition}
+
+
+\begin{proposition}\label{prop:zero}  The output of the network can be written as an inner product of the NPF and NPV, i.e., 
+$\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [P]}x(\I_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
+\end{proposition}
 
 \subsection{Neural Path Kernel and Correlation of Sub-Networks}
+\begin{definition}\label{def:lambda}
+ For input examples $s,s'\in[n]$, define $Act_{\Theta}(s,s')\stackrel{def}=\{p\in[P]\colon A_{\Theta}(x_s,p)= A_{\Theta}(x_{s'},p)=1\}$ to be the set of `active' paths for both $s,s'$  and $\Lambda_{\Theta}(s,s')\stackrel{def}=\frac{|Act_{\Theta}(s,s')|}{\din}$.
+\end{definition}
+\textbf{Remark:} Owing to the symmetry of a DNN, the same number of active paths start from any fixed input node. In \Cref{def:lambda}, $\Lambda_{\Theta}$ measures the size of the active sub-network as the total number of active paths starting from any fixed input node. For examples $s,s'\in[n],s\neq s'$, $\Lambda_{\Theta}(s,s)$ is equal to the size of the sub-network active for $s$, and $\Lambda_{\Theta}(s,s')$ is equal to the size of the sub-network active for both $s$ and $s'$. For an illustration of NPFs and $\Lambda$ please see \Cref{fig:npkexample}.
+\begin{lemma}\label{lm:npk}
+Let $H_{\Theta}\in\R^{n\times n}$ be the NPK matrix, whose entries are given by $H_{\Theta}(s,s')\stackrel{def}{=}\ip{\phi_{x_s,\Theta},\phi_{x_{s'},\Theta}},s,s'\in[n]$. Let $\Sigma\in\R^{n\times n}$ be the input Gram matrix with entires $\Sigma(s,s')=\ip{x_s,x_{s'}},s,s'\in[n]$. It follows that $H_{\Theta}= \Sigma\odot\Lambda_{\Theta}$, where $\odot$ is  the Hadamard product.
+\end{lemma}
 
-\subsection{Simple Experimental Setup: Deep Gated Networks}
+
+\subsection{Deep Gated Networks: Gates are External Masks}
+
 
 \subsection{NTK = $\text{NTK}^{\text{value}}+ \text{NTK}^\text{feature}$}
 
-\subsection{Simple Theorem: NTK = constant $\times$ NPK}
+\subsection{Theorem: $\text{NTK}^\text{value}$ = constant $\times$ NPK}
 
 
-\subsection{Role of Weights and Activations}
+
 
 \begin{comment}
 

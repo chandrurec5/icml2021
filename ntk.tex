@@ -13,7 +13,7 @@ As the alchemy question is being debated  \cite{BenAli-1,Lecun,BenAli-2,Alirespo
 Recent works have shown that DNNs in the limit of infinite width are equivalent to kernel methods \cite{ntk,fcgp,convgp,arora2019exact,cao2019generalization}. An important kernel associated with a (finite width) DNN is the so called \emph{neural tangent kernel} (NTK) based on the gradient of the output with respect to the DNN weights. As width approaches to infinity, both the neural tangent kernel converges to a limiting deterministic matrix. Hence, training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On a standard dataset such as CIFAR-10 the neural tangent kernel performs better than other prior pure kernel based methods. However, standard finite width convolutional neural network still outperforms its infinite width neural tangent kernel counterpart by $5-6\%$.
 
 \textbf{Issues with NTK:} Even though the NTK settles the training and generalisation questions in the case of infinite width DNNs, there are some interesting open questions. Firstly, we need to understand why  finite width neural networks outperform their infinite width neural tangent kernel counterparts. Secondly, it is not known why increasing the depth till a point makes the performance of the NTK also better.  %Thirdly, it is also not know why NTK corresponding to model with pooling performs better than models without pooling. Finally, feature learning is believed to be the unique differentiator of DNNs and other the machine learning methods, and neural tangent kernel being a kernel method has no feature learning.
-
+\begin{comment}
 \begin{table*}[t]
 \centering
 \begin{tabular}{|p{2cm}|p{7cm}|p{7cm}|}\hline
@@ -27,4 +27,4 @@ Convolution + Pooling&  Rotation invariance in hidden layer output & Rotation in
 Skips&  passes residual error & Sum of product kernel\\\hline
 \end{tabular}
 \end{table*}
-
+\end{comment}
