@@ -1,29 +1,32 @@
 \section{Duality: DNNs are both layers as well as paths}
-In this paper, we look at DNNs with ReLU. A special property of ReLU is that it is also a gate which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. A consequence of the gating property is \emph{duality}: DNNs are layers as well as paths. A path starts at an input node, passes through gates and weights and ends at the output node and the output can be expressed as a summation of individual path contributions. \cite{npk} used duality to separate the gates as masks from the weights and argued (via experiments and theory) that \emph{gates of a DNN alone is enough to obtain power insights}. The key experimental and theoretical results are summarised in the next two points.
+In this section we explain the notion of duality in DNNs with ReLUs. 
+\subsection{Gating property of ReLU}
+A special property of ReLU is that it is also a gate which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. 
+\FloatBarrier
+\begin{figure}[H]
+\includegraphics[scale=0.4]{figs/gating.pdf}
+\end{figure}
+\subsection{Output Expression: Primal vs Dual}
+A consequence of the gating property is \emph{duality}: DNNs are layers (primal view) as well as paths (dual view). The difference between the primal and the dual way of expressing the network output can be seen in \Cref{tb:primal-dual}
+\FloatBarrier
+\begin{table}[H]
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|c|c|}\hline
+Primal & $\hat{y}_{\Theta}(x)=\Theta(d)\text{ReLU}\Bigg(\Theta(d-1)\text{ReLU}\Big(\cdots\text{ReLU}\big(\Theta(1)x\big)\Big)\Bigg)$ \\\hline
+Dual  & $\hat{y}_{\Theta}(x)=\sum_{\text{path}}\text{individual path contribution}$ (see \Cref{prop:zero})\\\hline
+\end{tabular}
+}
+\caption{$\Theta(l),l=1,\ldots,d$ is the weight of layer $l$.}
+\label{tb:primal-dual}
+\end{table}
 
-1. \textbf{Experimental:} Using a deep gate network to decouple the gates as masks from the weights, it was shown that  (i) gates are learnt during training, (ii) learnt gates generalise better, (iii) most information is in the gates, i.e., with learnt gates as masks the weights can be reset and retrained without significant loss in test accuracy (iv) learning in gates is the reason why finite width DNNs perform better than infinite width NTK.
-
-
-2.  \textbf{Theoretical:}  When the gates are decoupled from weights, the NTK is a summation of two kernels, i.e., NTK = $\text{NTK}^{\text{fixed-gate}}+ \text{NTK}^\text{gate-learning}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel that corresponds to learning the wights keeping the gates fixed and $\text{NTK}^\text{gate-learning}$ is the kernel corresponds to learning of the gates themselves. Main theorem shows that the $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), which measures the similarity of a given pair of input examples in terms of the size of sub-network that is active\footnote{Active sub-network comprises of the gates which are \emph{on} (i.e., $1$) and the weights connecting such gates.} simultaneously for both the input examples.  
-
-
-Since we will be using the dual view, we now provide a brief summary of the same.
-
-\begin{comment}
-Rewriting everything in terms of gates.
-Simple Theory: Kernel depends on only gates. NTK = NPK
-
-Simple Experiments: Instead of designing another kernel method based on NPK we have 2 choices i) design another kernel ii) use the observation to more simple experiments. that NPK Keep experimenting with various gating patterns.
-
-\end{comment}
-\subsection{Neural Path Features and Value: Fully Connected}
+\subsection{Path, Neural Path Feature and Value}
 \FloatBarrier
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.32]{figs/paths.pdf}
 \end{figure}
 A path starts from an input node, passes through exactly one weight and one hidden node in each layer and ends at the output node. We have a total of $P=\din w^{(d-1)}$ paths. We assume that there is a natural enumeration of the paths, and denote the set of all paths by $[P]$.
-
 \begin{definition}\label{def:nps} Let $x\in\R^{\din}$ be the input to the DNN. For this input, 
 
 (i)  $A_{\Theta}(x,p)\stackrel{def}{=}\Pi_{l=1}^{d-1} G_{x,\Theta}(l,p)$ is the activity of a path.
@@ -32,11 +35,35 @@ A path starts from an input node, passes through exactly one weight and one hidd
 
 (iii)  $v_{\Theta}\stackrel{def}=\left(\Pi_{l=1}^d \theta(l,p),p\in[P]\right)\in\R^P$ is the {neural path value} (NPV).
 \end{definition}
-
-
 \begin{proposition}\label{prop:zero}  The output of the network can be written as an inner product of the NPF and NPV, i.e., 
 $\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [P]}x(\I_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
 \end{proposition}
+
+\subsection{Active Sub-Networks}
+\FloatBarrier
+\begin{figure}[H]
+\includegraphics[scale=0.25]{figs/step1.pdf}
+\end{figure}
+
+
+\begin{comment}
+
+\cite{npk} used duality to separate the gates as masks from the weights and argued (via experiments and theory) that \emph{gates of a DNN alone is enough to obtain power insights}. The key experimental and theoretical results are summarised in the next two points.
+
+1. \textbf{Experimental:} Using a deep gate network to decouple the gates as masks from the weights, it was shown that  (i) gates are learnt during training, (ii) learnt gates generalise better, (iii) most information is in the gates, i.e., with learnt gates as masks the weights can be reset and retrained without significant loss in test accuracy (iv) learning in gates is the reason why finite width DNNs perform better than infinite width NTK.
+
+
+2.  \textbf{Theoretical:}  When the gates are decoupled from weights, the NTK is a summation of two kernels, i.e., NTK = $\text{NTK}^{\text{fixed-gate}}+ \text{NTK}^\text{gate-learning}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel that corresponds to learning the wights keeping the gates fixed and $\text{NTK}^\text{gate-learning}$ is the kernel corresponds to learning of the gates themselves. Main theorem shows that the $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), which measures the similarity of a given pair of input examples in terms of the size of sub-network that is active\footnote{Active sub-network comprises of the gates which are \emph{on} (i.e., $1$) and the weights connecting such gates.} simultaneously for both the input examples.  
+
+
+Since we will be using the dual view, we now provide a brief summary of the same.
+\end{comment}
+\begin{comment}
+Rewriting everything in terms of gates.
+Simple Theory: Kernel depends on only gates. NTK = NPK
+
+Simple Experiments: Instead of designing another kernel method based on NPK we have 2 choices i) design another kernel ii) use the observation to more simple experiments. that NPK Keep experimenting with various gating patterns.
+
 
 \subsection{Neural Path Kernel and Correlation of Sub-Networks}
 \begin{definition}\label{def:lambda}
@@ -54,7 +81,7 @@ Let $H_{\Theta}\in\R^{n\times n}$ be the NPK matrix, whose entries are given by 
 \subsection{NTK = $\text{NTK}^{\text{value}}+ \text{NTK}^\text{feature}$}
 
 \subsection{Theorem: $\text{NTK}^\text{value}$ = constant $\times$ NPK}
-
+\end{comment}
 
 
 
