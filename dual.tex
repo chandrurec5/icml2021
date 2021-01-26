@@ -1,4 +1,4 @@
-\section{Duality: DNNs are both layers as well as paths}
+\section{Duality: DNNs are both layers and paths}
 In this section we explain the notion of duality in DNNs with ReLUs. 
 \subsection{Gating property of ReLU}
 A special property of ReLU is that it is also a gate which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. 
@@ -39,6 +39,10 @@ A path starts from an input node, passes through exactly one weight and one hidd
 $\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [P]}x(\I_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
 \end{proposition}
 
+\section{Duality + NTK: First Step}
+
+
+\begin{comment}
 \subsection{Active Sub-Networks}
 \FloatBarrier
 \begin{figure}[H]
@@ -46,7 +50,7 @@ $\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [P]}x(\I_0(p))A_
 \end{figure}
 
 
-\begin{comment}
+
 
 \cite{npk} used duality to separate the gates as masks from the weights and argued (via experiments and theory) that \emph{gates of a DNN alone is enough to obtain power insights}. The key experimental and theoretical results are summarised in the next two points.
 
