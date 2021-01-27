@@ -1,4 +1,4 @@
-\section{Duality: DNNs are both layers and paths}
+\section{Duality: Encoding gates and weights}
 In this section we explain the notion of duality in DNNs with ReLUs. 
 \subsection{Gating property of ReLU}
 A special property of ReLU is that it is also a gate which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. 
@@ -19,6 +19,22 @@ Dual  & $\hat{y}_{\Theta}(x)=\sum_{\text{path}}\text{individual path contributio
 \caption{$\Theta(l),l=1,\ldots,d$ is the weight of layer $l$.}
 \label{tb:primal-dual}
 \end{table}
+\subsection{Information Flow in a Fully Connected DNN}
+We consider fully connected networks with width `$w$' and depth `$d$'.
+\begin{table}[h]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{| lll|}\hline
+ $z_{x,\Theta}(\cdot,0)$ &$=$ &$x$ \\
+ $q_{x,\Theta}(\iout,l)$& $=$ & $\sum_{\iin}\Theta(\iin,\iout,l) \cdot z_{x,\Theta}(\iin,l-1) $\\
+$G_{x,\Theta}(\iout,l)$& $=$ & $\mathbf{1}_{\{q_{x,\Theta}(\iout,l)>0\}}$\\
+ $z_{x,\Theta}(\iout,l)$ & $=$ & $q_{x,\Theta}(\iout,l)\cdot G_{x,\Theta}(\iout,l)$\\
+ $\hat{y}_{\Theta}(x)$ & $=$ & $\sum_{\iin}\Theta(\iin,\iout, d)\cdot z_{x,\Theta}(\iin,d-1)$\\\hline
+\end{tabular}
+}
+\caption{\small{Information flow in a FC-DNN with ReLU. Here, `$q$'s are pre-activation inputs, `$z$'s are output of the hidden layers, `$G$'s are the gating values. $l\in[d-1]$ is the index of the layer, $\iout$ and $\iin$ are indices of  nodes in the current and previous layer respectively.}}
+\label{tb:basic}
+\end{table}
 
 \subsection{Path, Neural Path Feature and Value}
 \FloatBarrier
@@ -26,21 +42,33 @@ Dual  & $\hat{y}_{\Theta}(x)=\sum_{\text{path}}\text{individual path contributio
 \centering
 \includegraphics[scale=0.32]{figs/paths.pdf}
 \end{figure}
-A path starts from an input node, passes through exactly one weight and one hidden node in each layer and ends at the output node. We have a total of $P=\din w^{(d-1)}$ paths. We assume that there is a natural enumeration of the paths, and denote the set of all paths by $[P]$.
+
+\begin{definition}
+A path starts from an input node, passes through weights, hidden nodes, and normalisation constants and ends at the output node.
+\end{definition}
+\begin{proposition}
+The total number of paths in FC-DNN is $\Pfc=\din w^{(d-1)}$.
+\end{proposition}
+\begin{notation}[Index Maps]
+The ranges of index maps $\Ifeat_l$, $\I_l$ are $[\din]$ and $[w]$ respectively. The index maps are used to identify the nodes through which a path $p$ passes.
+\end{notation}
+
 \begin{definition}\label{def:nps} Let $x\in\R^{\din}$ be the input to the DNN. For this input, 
 
-(i)  $A_{\Theta}(x,p)\stackrel{def}{=}\Pi_{l=1}^{d-1} G_{x,\Theta}(l,p)$ is the activity of a path.
+(i)  $A_{\Theta}(x,p)=\Pi_{l=1}^{d-1} G_{x,\Theta}(\I_l(p),l)$ is the activity of a path.
 
-(ii)  $\phi_{x,\Theta}\stackrel{def}=\left(x(\I_0(p))A_{\Theta}(x,p) ,p\in[P]\right)\in\R^P$ is the {neural path feature} (NPF).
+(ii)  $\phi_{x,\Theta}\eqdef \left( x(\Ifeat_0(p))A_{\Theta}(x_s,p), p\in[\Pfc]\right)\in\R^{\Pfc}$ is the {neural path feature} (NPF).
 
-(iii)  $v_{\Theta}\stackrel{def}=\left(\Pi_{l=1}^d \theta(l,p),p\in[P]\right)\in\R^P$ is the {neural path value} (NPV).
+(iii)  $v_{\Theta}\eqdef \left( \Pi_{l=1}^d \Theta(\I_{l-1}(p),\I_l(p),l), p\in[\Pfc]\right)\in\R^{\Pfc}$ is the {neural path value} (NPV).
 \end{definition}
+
 \begin{proposition}\label{prop:zero}  The output of the network can be written as an inner product of the NPF and NPV, i.e., 
-$\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [P]}x(\I_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
+$\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [\Pfc]}x(\I_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
 \end{proposition}
 
 \section{Duality + NTK: First Step}
 
+\textbf{Challenge:}
 
 \begin{comment}
 \subsection{Active Sub-Networks}

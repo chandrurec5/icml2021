@@ -1,13 +1,13 @@
-\section{Deep Gated Network: Simple Experiments }
+\section{Deep Gated Network: Experimental setup to decouple gates from weights}
 The deep gated network (DGN) set up was introduced by \cite{npk}. The DGN treats the gates as masks and decouples them from the weights. The DGN is a ``simple experimental" setup to characterise the role played by the gates in a `standalone' manner.  
 \subsection{Setup}
+The DGN has two networks namely the \emph{feature network} parameterised by $\Tf\in\R^{d^{\text{f}}_{\text{net}}}$ which holds the NPFs (i.e., the gating information) and a \emph{value network} parameterised by $\Tv\in\R^{d^{\text{v}}_{\text{net}}}$ which holds the NPV.  The combined parameterisation is denoted by $\Theta^{\text{DGN}}=(\Tf,\Tv)\in \R^{d^{\text{f}}_{\text{net}}+d^{\text{v}}_{\text{net}}}$.  Thus the learning problem in the DGN is $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$. 
 \FloatBarrier
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.3]{figs/dgn.pdf}
 \end{center}
 \end{figure}
-The DGN has two networks namely the \emph{feature network} parameterised by $\Tf\in\R^{d^{\text{f}}_{\text{net}}}$ which holds the NPFs (i.e., the gating information) and a \emph{value network} parameterised by $\Tv\in\R^{d^{\text{v}}_{\text{net}}}$ which holds the NPV.  The combined parameterisation is denoted by $\Theta^{\text{DGN}}=(\Tf,\Tv)\in \R^{d^{\text{f}}_{\text{net}}+d^{\text{v}}_{\text{net}}}$.  Thus the learning problem in the DGN is $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$. 
 % \subsection{Background: Deep Gated Networks}\label{sec:decoupled}
 \begin{comment}
 \begin{tabular}{lll}
@@ -25,6 +25,16 @@ Learning Problem &:& $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$.
 \label{fig:dgn}
 \end{wrapfigure}
 \end{comment}
+\subsection{Training a DGN}
+\textbf{Value Network is the main network:}
+
+
+\textbf{Feature Network Pre-Training:}
+
+
+\textbf{Simultaneous Training:}
+
+
 \subsection{Regimes of DGN}
 % Here the gates/`active sub-networks' are held in the feature network and are then used in the value network.
 \begin{definition}\label{rm:regime}The DGN has $\mathbf{4}$ \textbf{regimes} namely \emph{decoupled learning} (DL), \emph{fixed learnt} (FL), \emph{fixed random-dependent initialisation} (FR-DI) and \emph{fixed random-independent initialisation} (FR-II). 
