@@ -19,7 +19,7 @@ The \emph{alchemy} question can further be broken down into sub-questions/issues
 
 7. There is a gap between \emph{universal approximation results} which characterise the class of functions representable by DNNs and \emph{practical} DNNs that are trained using SGD (and variants) starting from randomly initialised weights. Further, the performance of DNNs are evaluated on standard datasets such as MNIST and CIFAR-10. 
 
-\textbf{Our Work:} To address the aforementioned questions/issues/gaps, we propose a \emph{pedagogical nugget} of ``simple theorems, and simple experiments" \cite{Aliresponse} based on two prior works namely (i)\emph{duality} and (ii) \emph{neural tangent kernel} (NTK).  We now describe the gist of prior works on duality and the NTK.
+\textbf{Our Work:} To address the aforementioned questions/issues/gaps, we propose a \emph{pedagogical nugget} of ``simple theorems, and simple experiments" \cite{Aliresponse} based on two prior works namely (i)\emph{duality} and (ii) \emph{neural tangent kernel} (NTK).  We now place our work in relation to prior works on (i) NTK, (ii) Duality (see \Cref{fig:related}).
 
 \subsection{Duality and Neural Tangent Kernel}
 
@@ -33,42 +33,29 @@ $\approx 67\%$&$\approx 77\%$&$80\%$ and above
 }
 
 The NTK performs better than the CK as well as other prior pure kernel based methods \cite{arora2019exact}. However, standard finite width DNN (with convolutional layers) still outperforms its infinite width NTK counterpart. As a result, NTK was not fully adequate to explain DNNs.
-
-
-\FloatBarrier
-\begin{figure}[h]
+\begin{figure}
 \resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.25]{figs/related.pdf}
 }
+\caption{This paper in relation to (i) NTK, (ii) Duality.}
+\label{fig:related}
 \end{figure}
 
-\textbf{Duality:} In their recent work \cite{npk} proposed a dual approach to analyse DNNs with the rectified linear units (ReLUs). The dual approach exploits the special gating property of ReLU to breakdown the computation \emph{path-by-path} as opposed to the primal \emph{layer-by-layer} approach. Duality allows the output of the DNN to be expressed as a summation of  the individual path contributions. Each path has gates and weights, and the contribution of a path is the product of the signal at its input node, the gates and the weights in the path. The weights play a \emph{dual} role: the incoming weights of a ReLU triggers it on/off based on the previous layer input; the weights in a path amplify the signal at input node. The duality results in a simple experimental setup namely the deep gate network (DGN) and also simplifies the NTK. 
-\FloatBarrier
-\begin{figure}[h]
+\textbf{Duality and Simple Experiments:} In their recent work \cite{npk} proposed a dual approach to analyse DNNs with the rectified linear units (ReLUs). They exploited the special gating property of ReLU to devise a simple experimental setup called the deep gated network (DGN). In a DGN, the gates and the weights are held in separate networks as opposed to a DNN in which gates and weights are in the same network (see \Cref{fig:dgn}). They showed experimentally that:
+
+\begin{figure}
 \centering
 \resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.25]{figs/dnn-dgn.pdf}
 }
+\caption{DNN vs DGN.}
+\label{fig:dgn}
 \end{figure}
-
-$\bullet$  \textbf{Deep Gated Network} (DGN) stores the gates and weights in separate networks (a DNN stores both gates and weights in the same network). Using the DGN, \cite{npk} showed the following experimental results:
-
 $1.$ \emph{Most information is in the gates:} By using just the gates of a pre-trained DNN (by letting it to be the gating network), the weight network can be trained to match the test performance (within $1\%$ ) of the DNN.
 
 $2.$ \emph{Learning in gates} is the difference between finite width DNN and the infinite width NTK.  
 
-\resizebox{\columnwidth}{!}{
-\begin{tabular}{cccc}
-Random Gates & NTK & Learnt Gate & DNN\\
-$\approx 67\%$ & $\approx 77\%$ & $\approx 79\%$ & $\approx 80\%$\\
-\end{tabular}
-}
-
-$\bullet$  \textbf{Duality simplifies NTK:} \cite{npk} showed the following for a DGN:
-
-$1.$ $\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel corresponding to learning of the weights with the gates fixed and $\text{NTK}^{\text{gate-learn}}$ is the kernel corresponding to learning of gates themselves. 
-
-$2.$ Each input has a corresponding \emph{active sub-network} comprising of the gates that are \emph{on}. $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), a kernel which is dependent on the overlap of active sub-networks for the various input pairs.
+\textbf{Duality simplifies NTK:} \cite{npk} showed that in a DGN:$\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel corresponding to learning of the weights with the gates fixed and $\text{NTK}^{\text{gate-learn}}$ is the kernel corresponding to learning of gates themselves. Further, $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), a kernel which is solely dependent on the information stored in the gates.
 
 
 
