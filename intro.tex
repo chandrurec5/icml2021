@@ -142,7 +142,7 @@ $\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with
 
 $\bullet$ \textbf{Convolutional layers with pooling} renders the NPK \emph{rotationally invariant}.
 
-$\bullet$ \textbf{Learning in Gates (\Cref{fig:permute}):} We experimentally verify that DGN performance is invariant to (i) layer permutations ($\Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l}{w}$ does not change) and (ii) input tensor with entries equal to $1$ (in this case, NPK$(x,x')= \text{constant}\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l}{w}$ has the base kernels). This further supports the claim that \emph{most information is in the gates}. %This result shows that standard view that \emph{hidden layer outputs is a red-herring} and the actual feature learning happens in the gates.
+$\bullet$ \textbf{Invariances (\Cref{fig:permute}):} We experimentally verify that DGN performance is invariant to (i) layer permutations ($\Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l}{w}$ does not change) and (ii) input tensor with entries equal to $1$ (in this case, NPK$(x,x')= \text{constant}\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l}{w}$ has the base kernels). This further supports the claim that \emph{most information is in the gates}. %This result shows that standard view that \emph{hidden layer outputs is a red-herring} and the actual feature learning happens in the gates.
 \FloatBarrier
 \begin{figure}[h]
 \centering
@@ -152,8 +152,7 @@ $\bullet$ \textbf{Learning in Gates (\Cref{fig:permute}):} We experimentally ver
 \caption{ Experiments to show that most learning is in the gates.}
 \label{fig:permute}
 \end{figure}
-\subsection{Significance of Duality}
-The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. While the primal computations are used in \emph{actual} training via backpropagation and our results suggest that dual view is quite useful in interpretation. The significant points are:
+\textbf{Significance of Duality:} The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. The primal view is used in \emph{actual} training via backpropagation and our results suggest that the dual view is quite useful in interpretation. The significant points are:
 
 $\bullet$ The experimental result on DGN invariance to layer permutation tells us that visually interpreting the hidden layer outputs may not be meaningful. This also tips the balance in favour of the view that gates hold the true features.
 
