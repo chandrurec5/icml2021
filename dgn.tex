@@ -1,13 +1,13 @@
-\subsection{Deep Gated Network}
+\subsection{Deep Gated Network : Gating Experiments}
+\FloatBarrier
+\begin{figure}[h]
+\resizebox{\columnwidth}{!}{
+\includegraphics[scale=0.3]{figs/dgn-simple.pdf}
+}
+\end{figure}
 The deep gated network (DGN) set up was introduced by \cite{npk}. The DGN treats the gates as masks and decouples them from the weights. The DGN is a ``simple experimental" setup to characterise the role played by the gates in a `standalone' manner.  
 The DGN has two networks namely the \emph{feature network} parameterised by $\Tf\in\R^{d^{\text{f}}_{\text{net}}}$ which holds the NPFs (i.e., the gating information) and a \emph{value network} parameterised by $\Tv\in\R^{d^{\text{v}}_{\text{net}}}$ which holds the NPV.  The combined parameterisation is denoted by $\Theta^{\text{DGN}}=(\Tf,\Tv)\in \R^{d^{\text{f}}_{\text{net}}+d^{\text{v}}_{\text{net}}}$.  Thus the learning problem in the DGN is $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$. 
-\FloatBarrier
-\begin{figure}[H]
-\begin{center}
-\includegraphics[scale=0.3]{figs/dgn.pdf}
-\end{center}
-\end{figure}
-% \subsection{Background: Deep Gated Networks}\label{sec:decoupled}
+x% \subsection{Background: Deep Gated Networks}\label{sec:decoupled}
 \begin{comment}
 \begin{tabular}{lll}
 Feature Network (FN) 	&:&	$\Tf\in\R^{\dfnet}$; provides the gates/masks i.e., the NPFs.\\
@@ -24,7 +24,6 @@ Learning Problem &:& $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$.
 \label{fig:dgn}
 \end{wrapfigure}
 \end{comment}
-\subsubsection{Training Regimes of DGN}
 % Here the gates/`active sub-networks' are held in the feature network and are then used in the value network.
 \begin{definition}\label{rm:regime}The DGN has $\mathbf{4}$ \textbf{regimes} namely \emph{decoupled learning} (DL), \emph{fixed learnt} (FL), \emph{fixed random-dependent initialisation} (FR-DI) and \emph{fixed random-independent initialisation} (FR-II). 
 In all the regimes $\hat{y}_{\Tdgn}$ is the output, and $\Tv_0$ is always initialised at random and is \emph{trainable}. However, the regimes differ based on i) trainability of $\Tf$, ii) initialisation $\Tf_0$ as described below.\\
