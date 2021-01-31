@@ -136,7 +136,7 @@ Dual+NTK [This paper]& A & B & C& D & E& F & G & H\\ \hline
 \end{table}
 \end{comment}
 
-$\bullet$ \textbf{NPK has a composite structure:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
+$\bullet$ \textbf{NPK has a composite structure:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs for both $x$ and $x'$; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
 
 $\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with a \emph{ sum of product of base kernels}. 
 
@@ -171,7 +171,7 @@ Weights     &linear part & hyperplane related to gates\\\hline
 Width         & dimension of features in hidden layer&$\bm{\dagger}$ averaging in base kernels.\\\hline
 Depth       &nesting of non-linearity &  $\bm{\dagger}$ product of base kernels.\\\hline
 Skip          & residual error propagation & $\bm{\dagger}$ sum of product of base kernels.\\\hline
-Convolution + Pool & rotational invariance of features in hidden layer  & $\bm{\dagger}$ rotational invariance of NPK.\\\hline
+Convolution + Pooling & rotational invariance of features in hidden layer  & $\bm{\dagger}$ rotational invariance of NPK.\\\hline
 
 \end{tabular}
 }
