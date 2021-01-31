@@ -3,25 +3,36 @@ An important question plaguing machine learning \cite{BenAli-1,Lecun,BenAli-2,Al
 \begin{center}
 \textbf{\emph{Is Deep Learning Alchemy?}}
 \end{center}
+
+The \emph{alchemy} question can further be broken down into sub-questions/issues/gaps as listed below. 
+
+1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?
+
+2. \emph{Generalisation:} Standard DNNs are \emph{over-parameterised}, yet, when trained on data with true labels we observe good test performance \cite{ben}.
+
+3. \emph{Functionality:} The roles of the basic parts/variables namely weights, activation, depth and width have not been clearly understood. The standard understanding is that, in each layer, weights perform of a linear operation, the activations perform a non-linear operation, and stacking the layers depth-wise results in nesting of non-linear maps thereby enabling representation of more complicated input/output relationships. In particular, approximation results \cite{depth1,depth2} show that deeper models can approximate more complicated target functions better than shallow models. However,  \emph{practical} DNNs are trained/tested on standard datasets (such as MNIST and CIFAR-10) using SGD (and variants) starting from randomly initialised weights. Since not all representable functions can also be reached in practical DNNs the applicability of approximation results to practical DNNs is questionable. Further, convolutions with pooling and skip connections are also required for success of practical DNNs. 
+
+\textbf{Our Work:} We propose a \emph{pedagogical nugget} of ``simple theorems, and simple experiments" \cite{Aliresponse} to explain (i) training/generalisation, (ii) roles of activations, weights, depth, width, skip connections and convolutions with pooling for DNNs with rectified linear units (ReLUs). We show the DNNs with ReLU can be \emph{atomised} into a collection of hyper-planes (associated with the ReLUs). Our work is based on two prior works namely (i) \emph{duality} and (ii) \emph{neural tangent kernel} (NTK), which we explain below (see also \Cref{fig:related}).
+
+\begin{comment}
 The \emph{alchemy} question can further be broken down into sub-questions/issues/gaps as listed below. 
 
 1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?
 
 2. \emph{Generalisation:} Standard DNNs are \emph{over-parameterised}, yet, when trained on data with true labels we observe good test performance. Does understanding deep learning require rethinking generalisation? \cite{ben}
 
-3. \emph{Depth:} Approximation results show that more depth is better \cite{depth1,depth2}, i.e., deeper models can approximate more complicated target functions better than shallow models. Yet, when training on standard datasets, increasing the depth beyond a point adversely affects both training and test performance \cite{resnets}. This situation can be remedied by using \emph{skip connections} giving rise to residual neural networks. However, why increasing depth beyond a point hurts standard DNNs is still not understood satisfactorily. 
+%3. \emph{Depth:} Approximation results show that more depth is better \cite{depth1,depth2}, i.e., deeper models can approximate more complicated target functions better than shallow models. Yet, when training on standard datasets, increasing the depth beyond a point adversely affects both training and test performance \cite{resnets}. This situation can be remedied by using \emph{skip connections} giving rise to residual neural networks. However, why increasing depth beyond a point hurts standard DNNs is still not understood satisfactorily. 
 
-4. \emph{Depth vs Width:} Wider models \cite{wide1,wide2,wide3} have also been quite successful. While increasing either depth or width causes an increase in the number of model parameters, the trade-off between width and depth is not clearly understood.
+%4. \emph{Depth vs Width:} Wider models \cite{wide1,wide2,wide3} have also been quite successful. While increasing either depth or width causes an increase in the number of model parameters, the trade-off between width and depth is not clearly understood.
 
-5. \emph{Functionality:} The roles of the basic parts namely weights and activation have not been clearly understood.
+4. \emph{Functionality:} The roles of the basic parts/variables namely weights, activation, depth and width have not been clearly understood. For instance, approximation results show that more depth is better \cite{depth1,depth2}, yet, when training on standard datasets, increasing the depth beyond a point adversely affects both training and test performance \cite{resnets}. Also, wider models \cite{wide1,wide2,wide3} have also been quite successful. While increasing either depth or width causes an increase in the number of model parameters, the roles of  width and depth in practical DNNs is not clearly understood.
 
-6. \emph{Uninterpretablity of Learnt Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
+5. \emph{Uninterpretablity of Learnt Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
 
-7. There is a gap between \emph{universal approximation results} which characterise the class of functions representable by DNNs and \emph{practical} DNNs that are trained using SGD (and variants) starting from randomly initialised weights. Further, the performance of DNNs are evaluated on standard datasets such as MNIST and CIFAR-10. 
+\end{comment}
 
-\textbf{Our Work:} To address the aforementioned questions/issues/gaps, we propose a \emph{pedagogical nugget} of ``simple theorems, and simple experiments" \cite{Aliresponse} based on two prior works namely (i)\emph{duality} and (ii) \emph{neural tangent kernel} (NTK).  We now place our work in relation to prior works on (i) NTK, (ii) Duality (see \Cref{fig:related}).
 
-\subsection{Duality and Neural Tangent Kernel}
+\subsection{Prior Work: Neural Tangent Kernel and Duality}
 
 \textbf{Neural Tangent Kernel:} One of the approaches to understand the training and generalisation of a DNN is to study kernels associated with the DNN. Two important kernels associated with a DNN are its \emph{Conjugate Kernel (CK)/ Gaussian Process Kernel (GPK)} and the so called \emph{Neural Tangent Kernel (NTK)} . The CK is the Gram matrix of the features obtained at the penultimate layer output of the DNN. The NTK is Gram matrix of the Jacobian output of the DNN with respect to its weights. As width approaches to infinity, both the CK and the NTK converge to (their corresponding) limiting deterministic matrices. It has been shown that training the last layer of the infinite width DNN (known as \emph{lazy training}) is equivalent to a kernel method with the limiting CK and training all the layers of an infinite width DNN (known as \emph{full training}) is equivalent to a kernel method with the limiting NTK. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On CIFAR-10, the test accuracy of CK, NTK and standard DNN (all of three of them use convolution layers) is as follows:
 \resizebox{\columnwidth}{!}{
@@ -55,12 +66,12 @@ $1.$ \emph{Most information is in the gates:} By using just the gates of a pre-t
 
 $2.$ \emph{Learning in gates} is the difference between finite width DNN and the infinite width NTK.  
 
-\textbf{Duality simplifies NTK:} \cite{npk} showed that in a DGN:$\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel corresponding to learning of the weights with the gates fixed and $\text{NTK}^{\text{gate-learn}}$ is the kernel corresponding to learning of gates themselves. Further, $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), a kernel which is solely dependent on the information stored in the gates.
+\textbf{Duality simplifies NTK:} \cite{npk} showed that in a DGN, $\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel corresponding to learning of the weights with the gates fixed and $\text{NTK}^{\text{gate-learn}}$ is the kernel corresponding to learning of gates themselves. Further, $\text{NTK}^{\text{fixed-gate}}$ simplifies into a \emph{neural path kernel} (NPK), a kernel which is solely dependent on the information stored in the gates.
 
 
 
 \subsection{Our Contributions}
-The overall picture of duality and NTK results can be summarised  as follows: (i) training and generalisation of infinite width DNNs is explain by the NTK \cite{arora2019exact,cao2019generalization}, (ii) the difference between finite width DNNs and infinite width DNNs is explained by learning in gates \cite{npk}, (iii) ReLU activation has a special role, i.e., they are gates, (iv) the primary role of the weights is to trigger the ReLU on/off. In this work we complete the picture by explaining the roles of width, depth, skip connections and convolutional layers with pooling.  The theoretical and experimental contributions are listed as under.
+The overall picture (see \Cref{tb:overall}) of duality together with NTK can be summarised as follows: (i) training and generalisation of infinite width DNNs is explain by the NTK \cite{arora2019exact,cao2019generalization}, (ii) the difference between finite width DNNs and infinite width DNNs is explained by learning in gates \cite{npk}, (iii) ReLU activation has a special role, i.e., they are gates, (iv) the primary role of the weights is to trigger the ReLU on/off. In this work we complete the picture by explaining the roles of width, depth, skip connections and convolutional layers with pooling.  The theoretical and experimental contributions are listed as under.
 
 \FloatBarrier
 \begin{figure}[h]
@@ -69,17 +80,45 @@ The overall picture of duality and NTK results can be summarised  as follows: (i
 \includegraphics[scale=0.25]{figs/permute.pdf}
 }
 \end{figure}
+\begin{comment}
+\begin{table}
+\centering
+\begin{tabular}{p{1.75cm}p{2.25cm}p{2.25cm}p{0.01cm}}z
+	     &\centering{Primal} 	& \centering{Dual+NTK}&\\\hline
+Train, Gen. &\centering\ding{53}    & \centering{\ding{51}}& \\\hline
+ReLU          &\centering{\ding{51}: yet another non-linearity} & \centering{\ding{51}: gates that are learnt}&\\\hline
+Weights          &\centering{\ding{51}: linear part of a layer} & \centering{\ding{51}: triggers the gates}&\\\hline
 
+\end{tabular}
+\end{table}
+\end{comment}
 
+\begin{table}
+\centering
+\begin{tabular}{p{1.75cm}p{0.75cm}p{0.75cm}p{4cm}p{0.01cm}}
+	     &\centering{Primal} &\centering NTK	& \centering{Dual+NTK [This Paper]}&\\
+Train + Test &\centering\ding{53}  & \centering{\ding{51}},$*$  & \centering{\ding{51}},$**$& \\
+ReLU          &\centering{\ding{53}} & \centering{\ding{53}} & \centering{\ding{51}}&\\
+Weights          &\centering{\ding{53}} & \centering{\ding{53}}& \centering{\ding{51}}&\\
+Width          &\centering{\ding{53}} & \centering{\ding{53}}& \centering{\ding{51}}&\\
+Depth          &\centering{\ding{53}} & \centering{\ding{53}}& \centering{\ding{51}}&\\
+Skip          &\centering{\ding{51}} & \centering{\ding{53}}& \centering{\ding{51}}&\\
+Conv.+Pool          &\centering{\ding{51}} & \centering{\ding{53}}& \centering{\ding{51}}&\\
+\end{tabular}
+\caption{Overall picture. $*=$ does not explain difference between NTK and finite width DNN. $**=$ explains difference between NTK and finite width DNN}
+\label{tb:overall}
+\end{table}
 
+\begin{comment}
 \begin{table}
 \begin{tabular}{ccccccccc}\hline
 Primal & A & B & C& D & E& F & G & H\\ \hline
+Primal & \ding{53} & \ding{53} & C & D & E& F & G & H\\ \hline
 Kernel & A & B & C& D & E& F & G & H\\ \hline
-Dual-View& A & B & C& D & E& F & G & H\\ \hline
+Dual+NTK [This paper]& A & B & C& D & E& F & G & H\\ \hline
 \end{tabular}
 \end{table}
-
+\end{comment}
 
 
 \textbf{Theoretical Results:} We show that the NPK has a \emph{composite structure}, whose basic atomic units are the \emph{gates}. Specifically,
