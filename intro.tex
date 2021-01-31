@@ -1,6 +1,30 @@
 \section{Introduction}\label{sec:intro}
-An important question plaguing machine learning is \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens}:\\
-{\centerline{\textbf{\emph{Is Deep Learning Alchemy?}}}}\\
+An important question plaguing machine learning is \cite{BenAli-1,Lecun,BenAli-2,Aliresponse,Mickens}:
+\begin{center} 
+\textbf{\emph{Is Deep Learning Alchemy?}}
+ \end{center}
+At the centre of the question is the lack of \emph{pedagogical nuggets} of ``simple theorems, simple experiments" \cite{Aliresponse} that explains in an interpretable way the success of deep learning methods and practices.
+
+Recent works by \cite{arora2019exact, ntk,cao2019generalization} has given a kernel interpretation for deep learning. These works showed that training an infinite width DNN is equivalent to a kernel method with the so called limiting \emph{neural tangent kernel} (NTK) matrix. \cite{arora2019exact} showed that the limiting Convolutional NTK (CNTK) corresponding to a convolutional neural network (CNN) beats other pure kernel based methods. However, the CNN still outperforms the CNN by $5-6\%$. So, the NTK does not fully explain the success the DNNs. Also, it is not known why depth and pooling helps both the CNTK as well the CNN \cite{arora2019exact}.
+
+Recently, \cite{npk} developed a dual view for DNNs with rectified linear units (ReLUs). In the dual view, the computations are broken down \emph{path-by-path} as opposed to the primal view where the computations proceed \emph{layer-by-layer}. The dual view is possible thanks to the special gating property of ReLU, i.e., each ReLU is also a gate which either blocks (multiplies by $0$) or allows its pre-activation input (multiplies by $1$). The dual view provides a \emph{sub-network} based interpretation for DNNs: each input has a corresponding \emph{active sub-network} comprising of the gates that are \emph{on} and weights through such gate. This active sub-network is responsible for producing the output. 
+
+Using the dual view \cite{npk} encoded the gates in the so called \emph{neural path feature} (NPV) and the weights in the so called \emph{neural path value} (NPV). They also showed via  theory and experiments that the gates (i.e., NPFs) play are central to DNNs with ReLU and with the right NPFs the NPV can be discarded (i.e., retrained). The highlights are presented in the bulleted points below.
+
+$\bullet$ \emph{Theoretical:} The NPFs are more important than the NPV. More specifically, when the NPF and NPV are decoupled, in the limit of infinite width the NTK is equal to (up to a scaling constant) to the \emph{neural path kernel} (NPK), the Gram matrix of the NPFs. The NPK is a \emph{Hadamard product} of the input Gram matrix and correlation matrix that measures the amount overlap in the active sub-networks for the various pairs input examples.
+
+$\bullet$ \emph{Experimental:} Instead of devising a pure kernel method based on the NPK, \cite{npk} proposed a deep gated network (DGN) to experimentally characterise the information stored in the gates. In a DGN, the gates and the weights are held in separate networks as opposed to a DNN in which gates and weights are in the same network (see \Cref{fig:dgn}). The speciality of the DGN is that it can handle arbitrary gates, i.e., the gating network weights can be arbitrary and not necessarily random. This enables one to compare random gates (at randomised initialisation) and learnt gates (at end of training). Using the DNG, \cite{npk} showed that (i)  \emph{most information is in the gates:} By using just the gates of a pre-trained DNN (by letting it to be the gating network), the weight network can be trained to match the test performance (within $1\%$ ) of the DNN, and (ii) \emph{gates are learnt} during training a fact that explains the difference between finite width CNN and the infinite width CNTK.  
+\FloatBarrier
+\begin{figure}[h]
+\centering
+\resizebox{\columnwidth}{!}{
+\includegraphics[scale=0.25]{figs/dnn-dgn.pdf}
+}
+\caption{DNN vs DGN.}
+\label{fig:dgn}
+\end{figure}
+
+\begin{comment}
 The \emph{alchemy} question can further be broken down into sub-questions/issues/gaps as listed below. \\
 1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?\\
 2. \emph{Generalisation:} Standard DNNs are \emph{over-parameterised}, yet, when trained on data with true labels we observe good test performance \cite{ben}.\\
@@ -8,7 +32,7 @@ The \emph{alchemy} question can further be broken down into sub-questions/issues
 4. \emph{Uninterpretablity} of features learnt in hidden layers.\\ 
 \textbf{Our Work:} We propose a \emph{pedagogical nugget} of ``simple theorems, and simple experiments" \cite{Aliresponse} to explain (i) training/generalisation, (ii) roles of activations, weights, depth, width, skip connections and convolutions with pooling for DNNs with rectified linear units (ReLUs). \\
 \textbf{Message:} We show that a DNN (with ReLU) can be simplified into \emph{atomic} units. Just as a single perceptron is characterised by a hyperplane, a DNN (with ReLU) being a multi-layered-perceptron is \emph{almost completely} characterised by the collection of hyperplanes (associated with the ReLUs that form the DNN).
-\begin{comment}
+
 The \emph{alchemy} question can further be broken down into sub-questions/issues/gaps as listed below. 
 
 1. \emph{Training:} Despite a \emph{non-convex} loss surface, why is it possible for stochastic gradient descent (SGD) (and its variants) to achieve zero training error in standard deep neural networks (DNNs)?
@@ -24,6 +48,7 @@ The \emph{alchemy} question can further be broken down into sub-questions/issues
 5. \emph{Uninterpretablity of Learnt Representation:} The commonly held view of feature learning is that lower level features are learnt in the initial layers and as one proceeds in depth more sophisticated features are learnt in the higher levels and the final layer learns a linear model in the features given by the output of the penultimate layer. However, there is no straightforward way to interpret the features learnt in the hidden layers.
 
 \end{comment}
+\begin{comment}
 \subsection{Methodology: Neural Tangent Kernel and Duality}
 Our work is based on two prior works namely (i) \emph{duality} and (ii) \emph{neural tangent kernel} (NTK) (see also \Cref{fig:related}).\\
 \textbf{Neural Tangent Kernel:} One of the approaches to understand the training and generalisation of a DNN is to study kernels associated with the DNN. Two important kernels associated with a DNN are its \emph{Conjugate Kernel (CK)/ Gaussian Process Kernel (GPK)} and the so called \emph{Neural Tangent Kernel (NTK)} . The CK is the Gram matrix of the features obtained at the penultimate layer output of the DNN. The NTK is Gram matrix of the Jacobian output of the DNN with respect to its weights. As width approaches to infinity, both the CK and the NTK converge to (their corresponding) limiting deterministic matrices. It has been shown that training the last layer of the infinite width DNN (known as \emph{lazy training}) is equivalent to a kernel method with the limiting CK and training all the layers of an infinite width DNN (known as \emph{full training}) is equivalent to a kernel method with the limiting NTK. Thus training and generalisation of infinite width DNNs boils down to the properties of the limiting deterministic kernel matrix. On CIFAR-10, the test accuracy of CK, NTK and standard DNN (all of three of them use convolution layers) is as follows:
@@ -37,6 +62,7 @@ $\approx 67\%$&$\approx 77\%$&$80\%$ and above
 The NTK performs better than the CK as well as other prior pure kernel based methods \cite{arora2019exact}. However, standard finite width DNN (with convolutional layers) still outperforms its infinite width NTK counterpart. As a result, NTK was not fully adequate to explain DNNs.
 \FloatBarrier
 \begin{figure}[h]
+\centering
 \resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.25]{figs/related.pdf}
 }
@@ -66,6 +92,7 @@ $2.$ \emph{Learning in gates} is the difference between finite width DNN and the
 
 
 \textbf{Duality+ NTK:} The overall picture of duality together with NTK can be summarised as follows: (i) training and generalisation of infinite width DNNs is explain by the NTK \cite{arora2019exact,cao2019generalization}, (ii) \cite{npk} showed that most information is in the gates which is characterised by the NPK, (iii) ReLU activation has a special role, i.e., they are gates, (iv) the primary role of the weights is to trigger the ReLU on/off.
+\end{comment}
 \subsection{Contribution: Simplify NPK into atomic units}
  In this paper we simplify the NPK further to explain roles of width, depth, skip connections and convolutional layers with pooling. The highlights are presented below.
 
