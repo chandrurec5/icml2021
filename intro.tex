@@ -100,14 +100,17 @@ $\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with
 
 $\bullet$ \textbf{Convolutional layers with pooling} renders the NPK \emph{rotationally invariant}.
 
-$\bullet$ \textbf{Learning in Gates:} We collect more supporting evidence for the claim \emph{most information is in the gates}. In particular, we experimentally verify that DGN performance is invariant to even (i) permuting the order of the layers when we apply them as external masks (ii) providing a tensor with all entries $1$ instead of the input image (see \Cref{fig:permute}). This result shows that standard view that hidden layer outputs is a red-herring and the actual feature learning happens in the gates.
+$\bullet$ \textbf{Learning in Gates:} We collect more supporting evidence for the claim \emph{most information is in the gates}. In particular, we experimentally verify that DGN performance is invariant to even (i) permuting the order of the layers when we apply them as external masks (ii) providing a tensor with all entries $1$ instead of the input image (see \Cref{fig:permute}). %This result shows that standard view that \emph{hidden layer outputs is a red-herring} and the actual feature learning happens in the gates.
 \FloatBarrier
 \begin{figure}[h]
 \centering
 \resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.25]{figs/permute.pdf}
 }
+\caption{ Experiments to show that most learning is in the gates.}
+\label{fig:permute}
 \end{figure}
+
 
 \textbf{Primal vs Dual (see \Cref{tb:primal-dual}):} The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. While the primal computations are used in \emph{actual} training via backpropagation and our results suggest that dual view is quite useful in interpretation. 
 \begin{table}[h]

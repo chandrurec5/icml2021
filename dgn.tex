@@ -1,6 +1,5 @@
-\section{Deep Gated Network: Experimental setup to decouple gates from weights}
+\subsection{Deep Gated Network}
 The deep gated network (DGN) set up was introduced by \cite{npk}. The DGN treats the gates as masks and decouples them from the weights. The DGN is a ``simple experimental" setup to characterise the role played by the gates in a `standalone' manner.  
-\subsection{Setup}
 The DGN has two networks namely the \emph{feature network} parameterised by $\Tf\in\R^{d^{\text{f}}_{\text{net}}}$ which holds the NPFs (i.e., the gating information) and a \emph{value network} parameterised by $\Tv\in\R^{d^{\text{v}}_{\text{net}}}$ which holds the NPV.  The combined parameterisation is denoted by $\Theta^{\text{DGN}}=(\Tf,\Tv)\in \R^{d^{\text{f}}_{\text{net}}+d^{\text{v}}_{\text{net}}}$.  Thus the learning problem in the DGN is $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$. 
 \FloatBarrier
 \begin{figure}[H]
@@ -25,17 +24,7 @@ Learning Problem &:& $\hat{y}_{\Tdgn}(x)=\ip{\phi_{x,\Tf},v_{\Tv}}$.
 \label{fig:dgn}
 \end{wrapfigure}
 \end{comment}
-\subsection{Training a DGN}
-\textbf{Value Network is the main network:}
-
-
-\textbf{Feature Network Pre-Training:}
-
-
-\textbf{Simultaneous Training:}
-
-
-\subsection{Regimes of DGN}
+\subsubsection{Training Regimes of DGN}
 % Here the gates/`active sub-networks' are held in the feature network and are then used in the value network.
 \begin{definition}\label{rm:regime}The DGN has $\mathbf{4}$ \textbf{regimes} namely \emph{decoupled learning} (DL), \emph{fixed learnt} (FL), \emph{fixed random-dependent initialisation} (FR-DI) and \emph{fixed random-independent initialisation} (FR-II). 
 In all the regimes $\hat{y}_{\Tdgn}$ is the output, and $\Tv_0$ is always initialised at random and is \emph{trainable}. However, the regimes differ based on i) trainability of $\Tf$, ii) initialisation $\Tf_0$ as described below.\\
@@ -61,18 +50,14 @@ Value NTK & $\kf_{\Tdgn}(s,s')=\ip{\psif_{x_s,\Tdgn},\psif_{x_{s'},\Tdgn}}$, whe
 \label{tb:defks}
 \end{table}
 \end{comment}
-\subsection{NTK = $\text{NTK}^{\text{f}}+ \text{NTK}^\text{v}$}
-
+\subsection{$\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$}
 \begin{proposition}\label{prop:ntks} Let $K_{\Tdgn}$ be the NTK matrix of the DGN, then $K_{\Tdgn}=\kv_{\Tdgn}+\kf_{\Tdgn}$, with
-%\FloatBarrier
-\begin{table}[h]
-\
-\begin{tabular}{|c|p{6cm}|}\hline
-Overall NTK & $K_{\Tdgn}(s,s')=\ip{\psi_{x_s,\Tdgn},\psi_{x_{s'},\Tdgn}}$, where $\psi_{x,\Tdgn}=\nabla_{\Tdgn}\hat{y}_{\Tdgn}(x)\in\R^{\dnet}$\\\hline
-Feature NTK & $\kv_{\Tdgn}(s,s')=\ip{\psiv_{x_s,\Tdgn},\psiv_{x_{s'},\Tdgn}}$, where $\psiv_{x,\Tdgn}=\nabla_{\Tv}\hat{y}_{\Tdgn}(x)\in\R^{\dvnet}$\\\hline
-Value NTK & $\kf_{\Tdgn}(s,s')=\ip{\psif_{x_s,\Tdgn},\psif_{x_{s'},\Tdgn}}$, where $\psif_{x,\Tdgn}=\nabla_{\Tf}\hat{y}_{\Tdgn}(x)\in\R^{\dfnet}$\\\hline
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|p{2cm}|p{6cm}|}\hline
+NTK & $K(x,x')=\ip{\nabla\hat{y}(x),\nabla\hat{y}(x')}$\\\hline
+$\text{NTK}^{\text{gate-learn}}$ & $\kf(x,x')=\ip{ \nabla_{\Tf}\hat{y}(x), \nabla_{\Tf}\hat{y}(x') }$\\\hline
+$\text{NTK}^{\text{fixed-gate}}$ & $\kv(x,x')=\ip{ \nabla_{\Tv}\hat{y}(x), \nabla_{\Tv}\hat{y}(x') }$\\\hline
 \end{tabular}
-
-\end{table}
+}
 \end{proposition}
 \textbf{Remark:} There are two separate NTKs, each one corresponding to feature and value networks respectively. In the case of fixed regimes, $\kf=0$. 
