@@ -1,10 +1,12 @@
-\section{Role of Convolution with Pooling}
+\section{Convolution with Pooling: Rotational Invariance}
 
 \subsection{Weight Sharing: Illustrative Example}
 \FloatBarrier
 \begin{figure}[h]
 \centering
+\resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.4]{figs/conv.pdf}
+}
 \end{figure}
 
 \subsection{Circular Convolution With Pooling}
@@ -63,16 +65,17 @@ NPV& $v_{\Theta}\eqdef (v_{\Theta}(B_{\hat{p}}),\hat{p}\in [\hat{P}^{\text{cnn}}
 \end{center}
 \end{definition}
 
-\subsection{Neural Path Kernel}
-\begin{definition}\label{def:cnnlambda}
-Define $\Lambda_{\Theta}(i,x,x_{s'}) \eqdef \left|\{p\in[P]\colon  \I_0(p)=i, A_{\Theta}(x_s,p)= A_{\Theta}(x_{s'},p)=1\}\right|$ to be total number of `active' paths for both $x_s$ and $x_{s'}$ that pass through input node $i$.
-\end{definition}
-
 \begin{lemma}[Rotational Invariant Kernel]\label{lm:cnnnpk}
 Let $H^{\text{cnv}}_{\Theta}$ denote the NPK of a CNN, then 
 \begin{align*}
-H^{\text{cnv}}_{\Theta}(s,s')=\sum_{r=0}^{\din-1} \ip{x_s,rot(x_{s'},r)}_{\Lambda(\cdot, x_s,rot(x_{s'},r))}=\sum_{r=0}^{\din-1} \ip{rot(x_s,r),x_{s'}}_{\Lambda(\cdot, rot(x_s,r),x_{s'})}
+H^{\text{cnv}}_{\Theta}(s,s')&=\sum_{r=0}^{\din-1} \ip{x_s,rot(x_{s'},r)}_{\Lambda(\cdot, x_s,rot(x_{s'},r))}\\&=\sum_{r=0}^{\din-1} \ip{rot(x_s,r),x_{s'}}_{\Lambda(\cdot, rot(x_s,r),x_{s'})}
 \end{align*}
 \end{lemma}
 
+\begin{theorem}\label{th:main} $\sigcnn=\frac{\cscale}{\sqrt{w\wconv}}$  in \Cref{assmp:main}. As $w\ra\infty$, with  $\bcnn = \ \left(\dconv \sigcnn^{2(\dconv-1)}\sigfc^{2\dfc}+\dfc \sigcnn^{2\dconv}\sigfc^{2(\dfc-1)}\right)$ for CNN we have
+\begin{align*}
+\kv_{\Tdgn_0}\ra \frac{\bcnn}{{\din}^2} \cdot H_{\Tf_0},\,\,\text{(for GAP)}\\
+\kv_{\Tdgn_0}\ra {\bcnn} \cdot H_{\Tf_0},\,\,\text{(for GMP)}\\
+\end{align*}
+\end{theorem}
 

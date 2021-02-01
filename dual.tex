@@ -59,7 +59,7 @@ K_{\Theta}(x,x') = \langle\nabla_{\Theta} \hat{y}_{\Theta}(x), \nabla_{\Theta} \
 $}
 \end{definition}
 
-\cite{arora2019exact} showed that under appropriately randomised initialisation, as the width goes to infinity, $K_{\Theta_0}\ra K_*$, and $K_{\Theta_t}\approx K_{\Theta_0}$, where $K_*$ is the limiting (deterministic) NTK matrix. They also showed that an infinite width DNN trained using GD is equivalent to a kernel method with $K_*$. A pure kernel method with $K_*$ performs better than prior kernel methods by $10\%$, However, standard finite width DNN (with convolutional layers) still outperforms its corresponding $K_*$. So, NTK does not fully explain DNNs.
+\citet{arora2019exact} showed that under appropriately randomised initialisation, as the width goes to infinity, $K_{\Theta_0}\ra K_*$, and $K_{\Theta_t}\approx K_{\Theta_0}$, where $K_*$ is the limiting (deterministic) NTK matrix. They also showed that an infinite width DNN trained using GD is equivalent to a kernel method with $K_*$. A pure kernel method with $K_*$ performs better than prior kernel methods by $10\%$, However, standard finite width DNN (with convolutional layers) still outperforms its corresponding $K_*$. So, NTK does not fully explain DNNs.
 \begin{comment}
 \subsection{Active Sub-Networks}
 \FloatBarrier
@@ -70,7 +70,7 @@ $}
 
 
 
-\cite{npk} used duality to separate the gates as masks from the weights and argued (via experiments and theory) that \emph{gates of a DNN alone is enough to obtain power insights}. The key experimental and theoretical results are summarised in the next two points.
+\citet{npk} used duality to separate the gates as masks from the weights and argued (via experiments and theory) that \emph{gates of a DNN alone is enough to obtain power insights}. The key experimental and theoretical results are summarised in the next two points.
 
 1. \textbf{Experimental:} Using a deep gate network to decouple the gates as masks from the weights, it was shown that  (i) gates are learnt during training, (ii) learnt gates generalise better, (iii) most information is in the gates, i.e., with learnt gates as masks the weights can be reset and retrained without significant loss in test accuracy (iv) learning in gates is the reason why finite width DNNs perform better than infinite width NTK.
 

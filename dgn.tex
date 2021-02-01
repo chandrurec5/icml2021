@@ -50,6 +50,7 @@ Value NTK & $\kf_{\Tdgn}(s,s')=\ip{\psif_{x_s,\Tdgn},\psif_{x_{s'},\Tdgn}}$, whe
 \end{table}
 \end{comment}
 \subsection{$\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$}
+In a DGN, the gradient $\nabla_{\Tdgn}\hat{y}_{\Tdgn}(x)$ has two components i.e., $\nabla_{\Tdgn}\hat{y}_{\Tdgn}(x)=\left(\nabla_{\Tf}\hat{y}_{\Tdgn}(x),\nabla_{\Tv}\hat{y}_{\Tdgn}(x) \right)$, where $\nabla_{\Tf}\hat{y}_{\Tdgn}(x)$ flows through the feature network, and $\nabla_{\Tv}\hat{y}_{\Tdgn}(x)$ flows through the value network. This gives rise to the relation $\text{NTK}=\text{NTK}^{\text{fixed-gate}}+\text{NTK}^{\text{gate-learn}}$, where $\text{NTK}^{\text{fixed-gate}}$ is the kernel corresponding to learning of the weights with the gates fixed and $\text{NTK}^{\text{gate-learn}}$ is the kernel corresponding to learning of gates themselves. 
 \begin{proposition}\label{prop:ntks} Let $K_{\Tdgn}$ be the NTK matrix of the DGN, then $K_{\Tdgn}=\kv_{\Tdgn}+\kf_{\Tdgn}$, with
 \resizebox{\columnwidth}{!}{
 \begin{tabular}{|p{2cm}|p{6cm}|}\hline
@@ -59,4 +60,4 @@ $\text{NTK}^{\text{fixed-gate}}$ & $\kv(x,x')=\ip{ \nabla_{\Tv}\hat{y}(x), \nabl
 \end{tabular}
 }
 \end{proposition}
-\textbf{Remark:} There are two separate NTKs, each one corresponding to feature and value networks respectively. In the case of fixed regimes, $\kf=0$. 
+\textbf{Remark:} In the case of fixed regimes, $\kf=0$. 

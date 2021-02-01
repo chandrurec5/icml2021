@@ -3,7 +3,7 @@ An important question plaguing machine learning is \citet{BenAli-1,Lecun,BenAli-
 {\centerline{\textbf{\emph{Is Deep Learning Alchemy?}}}}\\
 At the centre of this question is the lack of \emph{pedagogical nuggets} of ``simple theorems, simple experiments" \citet{Aliresponse} that explains in an interpretable way the success of \emph{practical}\footnote{Off-the-shelf deep networks trained using stochastic gradient descent starting from randomised initialisation.} deep neural networks (DNNs). The goal of this paper is to propose one such pedagogical nugget to explain (i) training/generalisation, (ii) roles of activations, weights, depth, width, skip connections and convolutions with pooling for DNNs with rectified linear units (ReLUs). %By \emph{practical} DNNs, we mean standard off-the-shelf DNN architectures trained using stochastic gradient descent starting from randomised initialisation, and we choose to exclude pure function approximation results \citet{depth1,depth2}.
 
-Recent works by \citet{arora2019exact, ntk,cao2019generalization} have shown that training an infinite width DNN is equivalent to a kernel method with the so called limiting \emph{neural tangent kernel} (NTK) matrix. \citet{arora2019exact} showed that the limiting Convolutional NTK (CNTK) corresponding to a convolutional neural network (CNN) beats other pure kernel based methods. However, the CNN still outperforms the CNTK by $5-6\%$. So, the NTK does not fully explain the success the DNNs. Also, it is not known why depth and pooling helps both the CNTK as well the CNN \citet{arora2019exact}.
+Recent works by \citet{arora2019exact, ntk,cao2019generalization} have shown that training an infinite width DNN is equivalent to a kernel method with the so called limiting \emph{neural tangent kernel} (NTK) matrix. \citet{arora2019exact} showed that the limiting Convolutional NTK (CNTK) corresponding to a convolutional neural network (CNN) beats other pure kernel based methods. However, the CNN still outperforms the CNTK by $5-6\%$. So, the NTK does not fully explain the success the finite width DNNs. Also, it is not known why depth and pooling helps both the CNTK as well the CNN \cite{arora2019exact}.
 
 Recently, \citet{npk} developed a dual view for DNNs with ReLUs. In the dual view, the computations are broken down \emph{path-by-path} as opposed to the primal view where the computations proceed \emph{layer-by-layer}. The dual view is possible thanks to the special gating property of ReLU, i.e., each ReLU is also a gate which either blocks (multiplies by $0$) or allows its pre-activation input (multiplies by $1$). This provides a \emph{sub-network} based interpretation for DNNs: each input has a corresponding \emph{active sub-network} comprising of the gates that are \emph{on} and weights through such gates, that for produces the output. They also showed via theory and experiments that most information is stored in the gates (\emph{on/off} states of ReLU). The highlights are presented in the bulleted points below.
 
@@ -16,7 +16,7 @@ $\bullet$ \emph{Experiments:} Instead of devising a pure kernel method based on 
 %\resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.22]{figs/dnn-dgn.pdf}
 %}
-\caption{DNN vs DGN.}
+\caption{DNN vs DGN. DNN-DGN $<1\%$.}
 \label{fig:dgn}
 \end{figure}
 \begin{comment}
@@ -105,7 +105,7 @@ $2.$ \emph{Learning in gates} is the difference between finite width DNN and the
 \label{fig:related}
 \end{figure}
 
- In this paper, we simplify the NPK (see \Cref{fig:related}) to explain roles of width, depth, skip connections and convolutional layers with pooling. Our novel contributions are as under.
+ In this paper, we simplify the NPK into \emph{atomic} units to explain roles of width, depth, skip connections and convolutions with pooling. Our novel contributions are as under.
 
 \begin{comment}
 \begin{table}
@@ -132,7 +132,7 @@ Dual+NTK [This paper]& A & B & C& D & E& F & G & H\\ \hline
 \end{table}
 \end{comment}
 
-$\bullet$ \textbf{NPK has a composite structure:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs for both $x$ and $x'$; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
+$\bullet$ \textbf{NPK has a composite structure:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic atomic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs for both $x$ and $x'$; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
 
 $\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with a \emph{ sum of product of base kernels}. We also verify the benefit of skip connection in experiments.
 
@@ -149,9 +149,9 @@ $\bullet$ \textbf{Invariances (\Cref{fig:permutations}):} We experimentally veri
 \label{fig:permutations}
 \end{figure}
 
-$\bullet$ \textbf{Training only the gates} (\Cref{fig:permutations}) on CIFAR-10 achieves a test accuracy of $56\%$.
+$\bullet$ \textbf{Training only the gates} (\Cref{fig:permutations}) on CIFAR-10 achieves a test accuracy of $65\%$.
 
-\textbf{Significance of Duality:} The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. The primal view is used in \emph{actual} training via backpropagation and our results suggest that the dual view is quite useful in interpretation. The significant points are:
+\textbf{Significance of Duality:} The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. The primal view is used in \emph{actual} training via backpropagation and the dual view serves as pedagogical nugget to atomise and interpret DNNs. In particular,
 
 $\bullet$ The experimental result on DGN invariance to layer permutation suggests that visually interpreting the hidden layer outputs may not be meaningful. This also tips the balance in favour of the view that gates hold the true features.
 
@@ -160,7 +160,7 @@ $\bullet$ Just as a single perceptron is characterised by a hyperplane, a DNN (w
 \begin{table}[h]
 \resizebox{\columnwidth}{!}{
 \begin{tabular}{|p{1.75cm}|p{3.25cm}|p{2.75cm}|}\hline
-		&Primal & Dual + NTK\\\hline
+		&{Primal} & {Dual + NTK}\\\hline
 Output  &layer by layer & path by path \\		\hline
 Features & hidden layer output & $\bm{\dagger}$ gates\\\hline
 Interpretation  & difficult & sub-network \\\hline
@@ -173,7 +173,7 @@ Convolution + Pooling & rotational invariance of features in hidden layer  & $\b
 
 \end{tabular}
 }
-\caption{Primal-Dual Viewpoints. $\bm{\dagger}=$ work in this paper.}
+\caption{Primal-Dual Viewpoints. $\bm{\dagger}=$ novelties in this paper.}
 \label{tb:primal-dual}
 \end{table}
 
