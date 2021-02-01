@@ -7,16 +7,16 @@ Recent works by \citet{arora2019exact, ntk,cao2019generalization} have shown tha
 
 Recently, \citet{npk} developed a dual view for DNNs with ReLUs. In the dual view, the computations are broken down \emph{path-by-path} as opposed to the primal view where the computations proceed \emph{layer-by-layer}. The dual view is possible thanks to the special gating property of ReLU, i.e., each ReLU is also a gate which either blocks (multiplies by $0$) or allows its pre-activation input (multiplies by $1$). This provides a \emph{sub-network} based interpretation for DNNs: each input has a corresponding \emph{active sub-network} comprising of the gates that are \emph{on} and weights through such gates, that for produces the output. They also showed via theory and experiments that most information is stored in the gates (\emph{on/off} states of ReLU). The highlights are presented in the bulleted points below.
 
-$\bullet$ \emph{Theory:} When the gates are decoupled from the weights, in the limit of infinite width the NTK is equal (up to a scaling constant) to the \emph{neural path kernel} (NPK),  a kernel which is a solely dependent on the information in the gates. %\emph{Hadamard} product of Gram matrix and a correlation matrix that measures the amount overlap in the active sub-networks for the various pairs input examples.
+$\bullet$ \emph{Theory:} In the limit of infinite width, weights initialised statistically independent of arbitrary gates, the NTK is equal (up to a scaling constant) to the \emph{neural path kernel} (NPK), a kernel solely dependent on the information in the gates. %\emph{Hadamard} product of Gram matrix and a correlation matrix that measures the amount overlap in the active sub-networkss for the various pairs input examples.
 
-$\bullet$ \emph{Experiments:} Instead of devising a pure kernel method based on the NPK, a deep gated network (DGN) was proposed. In a DGN, the gates and the weights are held in separate networks as opposed to a DNN in which gates and weights are in the same network (see \Cref{fig:dgn}).  DGN was used to experimentally characterise the information stored in the gates of finite width DNNs. It was shown that (i)  \emph{most information is in the gates:} by using just the gates of a pre-trained DNN (by letting it to be the gating network), the weight network can be trained to match the test performance (within $1\%$ ) of the DNN, and (ii) \emph{gates are learnt} during training a fact that explains the difference between finite width CNN and the infinite width CNTK.  
+$\bullet$ \emph{Experiments:} A deep gated network (DGN) was proposed to experimentally characterise the information stored in the gates of finite width DNNs. This is a significant deviation from design and analysis based on kernels at randomised initialisation \cite{arora2019exact}. In a DGN, the gates and the weights are held in separate networks as opposed to a DNN which holds them in the same network (see \Cref{fig:dgn}).  It was shown that (i)  \emph{most information is in the gates:} by using just the gates of a pre-trained DNN (by letting it to be the gating network), the weight network can be trained to match the test performance (within $1\%$ ) of the DNN, and (ii) \emph{learning of gates} during training explains the difference between finite width CNN and the infinite width CNTK.  %Instead of devising a pure kernel method based on the NPK, a deep gated network (DGN) was proposed. 
 \FloatBarrier
 \begin{figure}[h]
 \centering
 %\resizebox{\columnwidth}{!}{
-\includegraphics[scale=0.22]{figs/dnn-dgn.pdf}
+\includegraphics[scale=0.25]{figs/dnn-dgn.pdf}
 %}
-\caption{DNN vs DGN. DNN-DGN $<1\%$.}
+\caption{\small{DNN vs DGN. DNN-DGN $<1\%$.}}
 \label{fig:dgn}
 \end{figure}
 \begin{comment}
@@ -151,12 +151,9 @@ $\bullet$ \textbf{Invariances (\Cref{fig:permutations}):} We experimentally veri
 
 $\bullet$ \textbf{Training only the gates} (\Cref{fig:permutations}) on CIFAR-10 achieves a test accuracy of $65\%$.
 
-\textbf{Significance of Duality:} The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. The primal view is used in \emph{actual} training via backpropagation and the dual view serves as pedagogical nugget to atomise and interpret DNNs. In particular,
-
-$\bullet$ The experimental result on DGN invariance to layer permutation suggests that visually interpreting the hidden layer outputs may not be meaningful. This also tips the balance in favour of the view that gates hold the true features.
-
-$\bullet$ Just as a single perceptron is characterised by a hyperplane, a DNN (with ReLU) being a multi-layered-perceptron is \emph{almost completely} characterised by the collection of hyperplanes (associated with the ReLUs that form the DNN).
-
+\textbf{Significance of Duality:} The primal \emph{layer-by-layer} and the dual \emph{path-by-path} views of computations complement each other. The primal view is used in \emph{actual} training via backpropagation and the dual view serves as pedagogical nugget to atomise and interpret DNNs. In particular,\\
+$\bullet$ The experimental result on DGN invariance to layer permutation suggests that visually interpreting the hidden layer outputs may not be meaningful. This also tips the balance in favour of the view that gates hold the true features.\\
+$\bullet$ Arbitrary gates (not just random) can be examined. Just as a single perceptron is characterised by a hyperplane, a DNN (with ReLU) being a multi-layered-perceptron is \emph{almost completely} characterised by the collection of hyperplanes (associated with the ReLUs that form the DNN).
 \begin{table}[h]
 \resizebox{\columnwidth}{!}{
 \begin{tabular}{|p{1.75cm}|p{3.25cm}|p{2.75cm}|}\hline
