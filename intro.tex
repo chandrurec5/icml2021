@@ -134,7 +134,7 @@ Dual+NTK [This paper]& A & B & C& D & E& F & G & H\\ \hline
 
 $\bullet$ \textbf{NPK has a composite structure:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic atomic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs for both $x$ and $x'$; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
 
-$\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with a \emph{ sum of product of base kernels}. We also verify the benefit of skip connection in experiments.
+$\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with a \emph{ sum of product of base kernels}.
 
 $\bullet$ \textbf{Convolutional layers with pooling} renders the NPK \emph{rotationally invariant}. 
 
@@ -215,4 +215,6 @@ We observe in our experiments that the performance is robust to such combinatori
 We also show experimentally how training with random labels affects the gates, and experimentally verify how skip connections improve the conditioning of the underlying NTK.
 \end{comment}
 \subsection{Organisation}
+Enough to say what is where.
 \subsection{Notation}
+We denote the set $\{1,\ldots, n\}$ by $[n]$. For $x,y\in\R^m$, $\ip{x,y}=x^\top y$. The dataset is denoted by $(x_s,y_s)_{s=1}^n\in\R^{\din}\times \R$. For an input $x\in\R^{\din}$, the output of the DNN  is denoted by $\hat{y}_{\Theta}(x)\in\R$, where $\Theta\in\R^{\dnet}$ are the weights. We use $\nabla_{\Theta}(\cdot)$ to denote the gradient of $(\cdot)$ with respect to the network weights. 
