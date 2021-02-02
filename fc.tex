@@ -50,16 +50,15 @@ $\bullet$ \textbf{Role of Weights:}  In other words, the weights of the feature 
 
 $\bullet$ \textbf{Role of Activations:} The ReLU is a special activation, that is, it acts as a gate and the gates themselves are learnt. In particular, learnt gates achieve better test accuracy than random gate (see \Cref{sec:exp}). 
 
-The points on the importance of gates (i.e., NPFs) and the fact that the gates (i.e., NPFs) are learnt were also made in prior work \cite{npk}. In this paper we strengthen these with additional experiments (see \Cref{sec:exp}).
+$\bullet$ \textbf{Width} is responsible for averaging (division by $w$) of the base kernels.
 
-$\bullet$ \textbf{Width} is responsible for averaging (division by $w$) of the base kernels. This is a new observation in this paper.
-
-$\bullet$ \textbf{Depth} is gives rise to a product of base kernels. This is a new observation in this paper.
+$\bullet$ \textbf{Depth} is gives rise to a product of base kernels. 
 
 $\bullet$ \textbf{Permutation Invariance} The NPK is invariant if the layers (as masks) are permuted. This is because the $\Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_{l,\Tf_0}(x,x')}{w}$ is permutation invariant. We verify this experimentally (see \Cref{sec:exp}).
 
 $\bullet$ \textbf{Input Invariance} Even if the input to the value network is set of a constant, i.e., even if $\langle x,x'\rangle$ is made constant, the gates still hold information in the from of $\Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_{l,\Tf_0}(x,x')}{w}$. We verify this experimentally (see \Cref{sec:exp}).
 
+The points on the importance of gates (i.e., NPFs) and the fact that the gates (i.e., NPFs) are learnt were also made in prior work \cite{npk}. In this paper we strengthen these with additional experiments (see \Cref{sec:exp}).
 
 \begin{comment}
 \subsection{Pictorial Illustration}

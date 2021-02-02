@@ -1,5 +1,5 @@
 \section{Convolution with Pooling: Rotational Invariance}
-
+\begin{comment}
 \subsection{Weight Sharing: Illustrative Example}
 \FloatBarrier
 \begin{figure}[h]
@@ -8,10 +8,12 @@
 \includegraphics[scale=0.4]{figs/conv.pdf}
 }
 \end{figure}
+\end{comment}
+%\subsection{Circular Convolution With Pooling}
+In this section, we define NPFs and NPV in the presence of convolution with pooling. This requires three key steps (i) treating pooling layers like gates/masks (\Cref{def:pooling}) (ii) bundling together the paths that share the same path value (due to weight sharing in convolutions) \Cref{def:bundle}, and (iii) re-defining the NPF and NPV for bundles \Cref{def:convnps}. Weight sharing and pooling makes the NPK rotationally invariant \Cref{lm:cnnnpk}.
 
-\subsection{Circular Convolution With Pooling}
+We consider (without loss of generality) a $1$-dimensional convolutional neural network with circular convolutions (see \Cref{tb:cconv}), with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer is $w$, and the width of the FC is also $w$. 
 
-We consider a $1$-dimensional convolutional neural network with circular convolutions (see \Cref{tb:cconv}), with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer is $w$, and the width of the FC is also $w$. 
 \begin{definition}[Circular Convolution]
 For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
 
@@ -21,7 +23,7 @@ For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
 
 (iii) $q_{x,\Theta}(\ifout,\iout,l)=\sum_{\icin,\iin}\Theta(\icin,\iin,\iout,l)\cdot z_{x,\Theta}(\ifout\oplus (\icin-1),\iin,l-1)$, where $\iin/\iout$ are the indices (taking values in $[w]$) of the input/output filters. $\icin$ denotes the indices of the convolutional window (taking values in $[\wconv]$) between input and output filters $\iin$ and $\iout$. $\ifout$ denotes the indices (taking values in $[\din]$, the dimension of input features) of individual nodes in a given output filter.
 \end{definition}
-\begin{definition}[Pooling]
+\begin{definition}\label{def:pooling}[Pooling]
 Let $G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1)$ denote the pooling mask, then we have
 \begin{align*}
 z_{x,\Theta}(\iout, \dc+1) =\sum_{\ifout} z_{x,\Theta}(\ifout,\iout,\dc)\cdot G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1),
@@ -34,7 +36,7 @@ for a given $\iout\in[w]$, $G^{\text{pool}}_{x,\Theta}(i_{\max},\iout,\dc+1)=1$ 
 Internal variables in the convolutional layers are circularly symmetric,  i.e., for $r\in\{0,\ldots,\din-1\}$ it follows that (i) $z_{rot(x,r),\Theta}(\ifout,\cdot,\cdot) = z_{x,\Theta}(\ifout \oplus r,\cdot,\cdot)$, (ii) $q_{rot(x,r),\Theta}(\ifout,\cdot,\cdot) = q_{x,\Theta}(\ifout \oplus r,\cdot,\cdot)$ and (iii) $G_{rot(x,r),\Theta}(\ifout,\cdot,\cdot) = G_{x,\Theta}(\ifout \oplus r,\cdot,\cdot)$.
 \end{proposition}
 \end{comment}
-\subsection{Bundles, Neural Path Feature and Value}
+%\subsection{Bundles, Neural Path Feature and Value}
 \begin{proposition}
 The total number of paths in a CNN is given by  $\Pcnn=\din(\wconv w)^{\dc}w^{(\dfc-1)}$.
 \end{proposition}
@@ -51,7 +53,7 @@ Let $\hat{P}^{\text{cnn}}=\frac{\Pcnn}{\din}$, and $\{B_1,\ldots, B_{\hat{P}^{\t
 There are exactly $\din$ paths in a bundle.
 \end{proposition}
 
-\begin{definition}\label{def:nps} Let $x\in\R^{\din}$ be the input to the CNN. For this input, 
+\begin{definition}\label{def:convnps} Let $x\in\R^{\din}$ be the input to the CNN. For this input, 
 \begin{tabular}{rlp{4cm}}
 $A_{\Theta}(x,p)$&$\eqdef$&$\Pi_{l=1}^{\dc+1} G_{x,\Theta}(\Ifeat_l(p),\I_l(p),l)\times\Pi_{l=\dc+2}^{\dc+\dfc+1} G_{x,\Theta}(\I_l(p),l)$\\
 $\phi_{x,\Theta}(\hat{p})$&$\eqdef$&$ \sum_{\hat{p}\in B_{\hat{p}}}x(\Ifeat_0(p))A_{\Theta}(x,p)$\\
