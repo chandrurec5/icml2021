@@ -1,5 +1,5 @@
 \section{Simplifying NTK into atomic units: Roles of gates, weights, width and depth}
-In this section, we simply the NTK into atomic units (\Cref{th:main}): we first simplify the \emph{neural path kernel} (NPK) associated with the neural path features into a product of base kernels units in \Cref{lm:productkernel} (new result in this paper) and invoke {Theorem $5.1$}, \cite{npk}. 
+In this section, we simply the NTK into atomic units (\Cref{th:main}): we first simplify the \emph{neural path kernel} (NPK) associated with the neural path features into a product of base kernels in \Cref{lm:productkernel} (new result in this paper) and invoke {Theorem $5.1$}, \cite{npk}. 
 \subsection{Neural Path Kernel: Composition of Base Kernels}
 We will now discuss the properties of \emph{neural path kernel} (NPK) associated with the NPFs defined in \Cref{sec:dual}.  
 \begin{definition}
@@ -8,7 +8,7 @@ Let $H_{\Theta}(x,x')\eqdef\langle\phi_{x,\Theta},\phi_{x',\Theta} \rangle$ be t
 \begin{comment}
 As a result, it turns out that, depending on the network architecture, the NPK has interesting structure/form. In FC-DNN, the NPK involves product of base kernels (\Cref{def:layerkernel},\Cref{lm:productkernel}) corresponding to the binary gating features of the various layers. In ResNet with $b$ skip connections there are $2^b$ sub-FC-DNNs and the NPK is a sum of the NPKs of these sub-FC-DNNs (\Cref{lm:sumofproduct}). Further, in CNNs due to weight sharing, the NPK has a rotationally invariant form (\Cref{lm:cnnnpk}). In what follows, we define the NPK matrix to be  $H_{\Theta}\eqdef\Phi^\top_{\Theta}\Phi_{\Theta}$, where $\Phi_{\Theta}=(\phi_{x_1,\Theta},\ldots,\phi_{x_n,\Theta})\in\R^{P\times n}$ is the NPF matrix.
 \end{comment}
-Recall that a co-ordinate of NPF can be non-zero only if the corresponding path is active. Consequently, the NPK for a pair of input examples is a similarity measure that depends on the number of paths that are active for both examples. Such common active paths are captured in a quantity denoted by $\Lambda$ defined below.
+Recall from \Cref{def:nps} that a co-ordinate of NPF can be non-zero only if the corresponding path is active. Consequently, the NPK for a pair of input examples is a similarity measure that depends on the number of paths that are active for both examples. Such common active paths are captured in a quantity denoted by $\Lambda$ defined below.
 \begin{definition}\label{def:cnnlambda}
 The total number of `active' paths for both $x$ and $x'$ that pass through input node $i$ is defined to be:
 \resizebox{\columnwidth}{!}{{$\Lambda_{\Theta}(i,x,x') \eqdef \left|\{p\in[P]\colon  \Ifeat_0(p)=i, A_{\Theta}(x,p)= A_{\Theta}(x',p)=1\}\right|$}}
