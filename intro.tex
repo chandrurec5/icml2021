@@ -215,7 +215,7 @@ We observe in our experiments that the performance is robust to such combinatori
 
 We also show experimentally how training with random labels affects the gates, and experimentally verify how skip connections improve the conditioning of the underlying NTK.
 \end{comment}
-\subsection{Organisation}
-Enough to say what is where.
-\subsection{Notation}
+\subsection{Organisation and Notation}
+\Cref{sec:ntk,sec:dual,sec:dgn} contains brief overview of the NTK, duality and the DGN setup. \Cref{sec:fc} contains the result which explains the role of activations, weights, depth and width. \Cref{sec:res,sec:conv} contains the result that explains the role of skip connections and convolutions with pooling respectively. \Cref{sec:exp} contains the numerical experiments.
+
 We denote the set $\{1,\ldots, n\}$ by $[n]$. For $x,y\in\R^m$, $\ip{x,y}=x^\top y$. The dataset is denoted by $(x_s,y_s)_{s=1}^n\in\R^{\din}\times \R$. For an input $x\in\R^{\din}$, the output of the DNN  is denoted by $\hat{y}_{\Theta}(x)\in\R$, where $\Theta\in\R^{\dnet}$ are the weights. $\nabla_{\Theta}(\cdot)$ denotes the gradient of $(\cdot)$ with respect to $\Theta$. 
