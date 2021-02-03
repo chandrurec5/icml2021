@@ -133,7 +133,7 @@ Dual+NTK [This paper]& A & B & C& D & E& F & G & H\\ \hline
 \end{table}
 \end{comment}
 
-$\bullet$ \textbf{NPK has a composite structure:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic atomic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs for both $x$ and $x'$; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
+$\bullet$ \textbf{Simplifying the NPK:} In fully connected DNNs, we show that (for inputs $x,x'\in\R^{\din}$) NPK$(x,x')=\langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_l(x,x')}{w}$. Here the most basic atomic units are the gates; stacking ReLUs widthwise in a layer gives rise to a base kernel $\frac{H^{\text{lyr}}_l(x,x')}{w}$ which measures the \emph{average} number of triggered ReLUs for both $x$ and $x'$; stacking layers depth-wise gives rise to the \emph{product} of base kernels. This explains the roles of \emph{width and depth}.
 
 $\bullet$ \textbf{Residual Networks} with skip connections give rise to NPK with a \emph{ sum of product of base kernels}.
 
@@ -158,20 +158,20 @@ $\bullet$ Arbitrary gates (not just random) can be examined. Just as a single pe
 \begin{table}[h]
 \resizebox{\columnwidth}{!}{
 \begin{tabular}{|p{1.75cm}|p{3.25cm}|p{2.75cm}|}\hline
-		&{Primal} & {Dual + NTK}\\\hline
+	&{Primal} & {Dual + NTK}\\\hline
 Output  &layer by layer & path by path \\		\hline
-Features & hidden layer output & $\bm{\dagger}$ gates\\\hline
+Features & hidden layer output &  gates; ${\color{red}\bm{\dagger}}$layers can be permuted\\\hline
 Interpretation  & difficult & sub-network \\\hline
 ReLU        &yet another non-linearity & gating property; gates are learnt; \\\hline
 Weights     &linear part & hyperplane related to gates\\\hline
-Width         & dimension of features in hidden layer&$\bm{\dagger}$ averaging in base kernels.\\\hline
-Depth       &nesting of non-linearity &  $\bm{\dagger}$ product of base kernels.\\\hline
-Skip          & residual error propagation & $\bm{\dagger}$ sum of product of base kernels.\\\hline
-Convolution + Pooling & rotational invariance of features in hidden layer  & $\bm{\dagger}$ rotational invariance of NPK.\\\hline
+Width         & dimension of features in hidden layer&${\color{red}\bm{\dagger}}$ averaging in base kernels.\\\hline
+Depth       &nesting of non-linearity &  ${\color{red}\bm{\dagger}}$ product of base kernels.\\\hline
+Skip          & residual error propagation & ${\color{red}\bm{\dagger}}$ sum of product of base kernels.\\\hline
+Convolution + Pooling & rotational invariance of features in hidden layer  & ${\color{red}\bm{\dagger}}$ rotational invariance of NPK.\\\hline
 
 \end{tabular}
 }
-\caption{Primal-Dual Viewpoints. $\bm{\dagger}=$ novelties in this paper.}
+\caption{Primal-Dual Viewpoints. ${\color{red}\bm{\dagger}}=$ novelties in this paper.}
 \label{tb:primal-dual}
 \end{table}
 
