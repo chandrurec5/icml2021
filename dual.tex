@@ -1,9 +1,9 @@
 \section{Duality: Layer-by-Layer vs Path-by-Path}
-In this section, we will present a brief overview of dual view for fully connected DNN (FC-DNN) with ReLU as presented in \cite{npk}. A special property of ReLU is that it is also a gate (see \Cref{fig:gating}) which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. The gating property gives rise to \emph{duality}: computations in a DNN can be expressed \emph{layer-by-layer} (see \Cref{sec:primal}) or \emph{path-by-path} (see \Cref{sec:dual}). The contribution of a path is the product of the signal in its input node, the weights in the path and the gates in the path. For a DNN with `$P$' paths, for an input $x\in\R^{\din}$,  the gating information is encoded in a novel \emph{neural path feature} (NPF), $\phi_{x,\Theta}\in\R^P$ and a novel \emph{neural path value} (NPV), $v_{\Theta}\in\R^P$ encodes the weights.  The output of the DNN is then the inner product of the NPFs and NPVs, i.e., $\hat{y}_{\Theta}(x_s)=\ip{\phi_{x_s,\Theta},v_{\Theta}}$ (\Cref{prop:zero}).
+In this section, we will present a brief overview of dual view for fully connected DNN (FC-DNN) with ReLU as presented in \cite{npk}. A special property of ReLU is that it is also a gate (see \Cref{fig:gating}) which either blocks (i.e., multiplies by $0$) or allows (i.e., multiplies by $1$) its pre-activation input. The gating property gives rise to \emph{duality}: computations in a DNN can be expressed \emph{layer-by-layer} (see \Cref{sec:primal}) or \emph{path-by-path} (see \Cref{sec:dual}). The contribution of a path is the product of the signal in its input node, the weights in the path and the gates in the path. For a DNN with `$P$' paths, for an input $x\in\R^{\din}$,  the gating information is encoded in a novel \emph{neural path feature} (NPF), $\phi_{x,\Theta}\in\R^P$ and a novel \emph{neural path value} (NPV), $v_{\Theta}\in\R^P$ encodes the weights.  The output of the DNN is then the inner product of the NPFs and NPVs, i.e., $\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}$ (\Cref{prop:zero}).
 \FloatBarrier
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.3]{figs/gating.pdf}
+\includegraphics[scale=0.25]{figs/gating.pdf}
 \caption{Gating property of ReLU}
 \label{fig:gating}
 \end{figure}
@@ -37,21 +37,21 @@ A path starts from an input node, passes through a weight and a hidden node in e
 \begin{proposition}
 FC-DNN has $\Pfc=\din w^{(d-1)}$ paths.
 \end{proposition}
-\begin{notation}[Index Maps]
-The ranges of index maps $\Ifeat_l$, $\I_l$ are $[\din]$ and $[w]$ respectively. The index maps are used to identify the nodes through which a path $p$ passes.
+\begin{notation}
+Index maps identify the nodes through which a path $p$ passes. The ranges of index maps $\Ifeat_l$, $\I_l,l\in[d-1]$ are $[\din]$ and $[w]$ respectively.  $\I_d(p)=1,\forall p\in[\Pfc]$.
 \end{notation}
 
 \begin{definition}\label{def:nps} Let $x\in\R^{\din}$ be the input to the DNN. For this input, 
 
-(i)  $A_{\Theta}(x,p)=\Pi_{l=1}^{d-1} G_{x,\Theta}(\I_l(p),l)$ is the activity of a path.
+(i)  $A_{\Theta}(x,p)\eqdef\Pi_{l=1}^{d-1} G_{x,\Theta}(\I_l(p),l)$ is the activity of a path.
 
-(ii)  $\phi_{x,\Theta}\eqdef \left( x(\Ifeat_0(p))A_{\Theta}(x_s,p), p\in[\Pfc]\right)\in\R^{\Pfc}$ is the {neural path feature} (NPF).
+(ii)  $\phi_{x,\Theta}\eqdef \left( x(\Ifeat_0(p))A_{\Theta}(x,p), p\in[\Pfc]\right)\in\R^{\Pfc}$ is the {neural path feature} (NPF).
 
 (iii)  $v_{\Theta}\eqdef \left( \Pi_{l=1}^d \Theta(\I_{l-1}(p),\I_l(p),l), p\in[\Pfc]\right)\in\R^{\Pfc}$ is the {neural path value} (NPV).
 \end{definition}
-\textbf{Remark:} A coordinate of NPF can be non-zero only if the corresponding path is active.
-\begin{proposition}\label{prop:zero}  The output of the network can be written as an inner product of the NPF and NPV, i.e., 
-$\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [\Pfc]}x(\I_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
+\textbf{Remark:} A coordinate of NPF can be non-zero only if the corresponding path is active ($A_{\Theta}(x,p)=1$), which happens only if all the gates in the path are $1$. 
+\begin{proposition}\label{prop:zero}  The output of the DNN can be written as an inner product of the NPF and NPV, i.e., 
+$\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [\Pfc]}x(\Ifeat_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
 \end{proposition}
 
 

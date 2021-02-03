@@ -10,9 +10,9 @@
 \end{figure}
 \end{comment}
 %\subsection{Circular Convolution With Pooling}
-In this section, we define NPFs and NPV in the presence of convolution with pooling. This requires three key steps (i) treating pooling layers like gates/masks (\Cref{def:pooling}) (ii) bundling together the paths that share the same path value (due to weight sharing in convolutions) \Cref{def:bundle}, and (iii) re-defining the NPF and NPV for bundles \Cref{def:convnps}. Weight sharing and pooling makes the NPK rotationally invariant \Cref{lm:cnnnpk}.
+In this section, we define NPFs and NPV in the presence of convolution with pooling. This requires three key steps (i) treating pooling layers like gates/masks (\Cref{def:pooling}) (ii) bundling together the paths that share the same path value (due to weight sharing in convolutions) \Cref{def:bundle}, and (iii) re-defining the NPF and NPV for bundles \Cref{def:convnps}. Weight sharing due to convolutions and pooling makes the NPK rotationally invariant \Cref{lm:cnnnpk}.
 
-We consider (without loss of generality) a $1$-dimensional convolutional neural network with circular convolutions (see \Cref{tb:cconv}), with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer is $w$, and the width of the FC is also $w$. 
+We consider (w.l.o.g) a $1$-dimensional convolutional neural network with circular convolutions, with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer as well as the width of the FC is $w$. 
 
 \begin{definition}[Circular Convolution]
 For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
@@ -25,9 +25,9 @@ For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
 \end{definition}
 \begin{definition}\label{def:pooling}[Pooling]
 Let $G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1)$ denote the pooling mask, then we have
-\begin{align*}
-z_{x,\Theta}(\iout, \dc+1) =\sum_{\ifout} z_{x,\Theta}(\ifout,\iout,\dc)\cdot G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1),
-\end{align*}
+\centerline{\resizebox{\columnwidth}{!}{
+$z_{x,\Theta}(\iout, \dc+1) =\sum_{\ifout} z_{x,\Theta}(\ifout,\iout,\dc)\cdot G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1),$
+}}
 where in the case of \emph{global-average-pooling} $G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1)=\frac{1}{\din},\forall \iout\in[w], \ifout\in[\din]$, and in the case of \emph{$\max$-pooling},  
 for a given $\iout\in[w]$, $G^{\text{pool}}_{x,\Theta}(i_{\max},\iout,\dc+1)=1$ where $i_{\max}=\arg\max_{\ifout}z_{x,\Theta}(\ifout,\iout,\dc)$, and $G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1)=0,\forall \ifout\neq i_{\max}$.
 \end{definition}
@@ -55,9 +55,9 @@ There are exactly $\din$ paths in a bundle.
 
 \begin{definition}\label{def:convnps} Let $x\in\R^{\din}$ be the input to the CNN. For this input, 
 \begin{tabular}{rlp{4cm}}
-$A_{\Theta}(x,p)$&$\eqdef$&$\Pi_{l=1}^{\dc+1} G_{x,\Theta}(\Ifeat_l(p),\I_l(p),l)\times\Pi_{l=\dc+2}^{\dc+\dfc+1} G_{x,\Theta}(\I_l(p),l)$\\
+$A_{\Theta}(x,p)$&$\eqdef$&$\left(\Pi_{l=1}^{\dc+1} G_{x,\Theta}(\Ifeat_l(p),\I_l(p),l)\right)\cdot\left(\Pi_{l=\dc+2}^{\dc+\dfc+1} G_{x,\Theta}(\I_l(p),l)\right)$\\
 $\phi_{x,\Theta}(\hat{p})$&$\eqdef$&$ \sum_{\hat{p}\in B_{\hat{p}}}x(\Ifeat_0(p))A_{\Theta}(x,p)$\\
-$v_{\Theta}(B_{\hat{p}})$&$\eqdef$&$ \Pi_{l=1}^{\dc} \Theta(\Iconv_{l}(p),\I_{l-1}(p),\I_{l}(p),l) \times \Pi_{l=\dc+2}^{\dc+\dfc+1} \Theta(\I_{l-1}(p),\I_l(p),l)$ 
+$v_{\Theta}(B_{\hat{p}})$&$\eqdef$&$ \left(\Pi_{l=1}^{\dc} \Theta(\Iconv_{l}(p),\I_{l-1}(p),\I_{l}(p),l)\right) \cdot\left( \Pi_{l=\dc+2}^{\dc+\dfc+1} \Theta(\I_{l-1}(p),\I_l(p),l)\right)$ 
 \end{tabular}
 \begin{center}
 \begin{tabular}{|c|c|}\hline
@@ -68,16 +68,16 @@ NPV& $v_{\Theta}\eqdef (v_{\Theta}(B_{\hat{p}}),\hat{p}\in [\hat{P}^{\text{cnn}}
 \end{definition}
 
 \begin{lemma}[Rotational Invariant Kernel]\label{lm:cnnnpk}
-Let $H^{\text{cnv}}_{\Theta}$ denote the NPK of a CNN, then 
+Let $H^{\text{cnn}}_{\Theta}$ denote the NPK of a CNN, then 
 \begin{align*}
-H^{\text{cnv}}_{\Theta}(s,s')&=\sum_{r=0}^{\din-1} \ip{x_s,rot(x_{s'},r)}_{\Lambda(\cdot, x_s,rot(x_{s'},r))}\\&=\sum_{r=0}^{\din-1} \ip{rot(x_s,r),x_{s'}}_{\Lambda(\cdot, rot(x_s,r),x_{s'})}
+H^{\text{cnn}}_{\Theta}(x,x')&=\sum_{r=0}^{\din-1} \ip{x,rot(x',r)}_{\Lambda(\cdot, x,rot(x',r))}\\&=\sum_{r=0}^{\din-1} \ip{rot(x,r),x'}_{\Lambda(\cdot, rot(x,r),x')}
 \end{align*}
 \end{lemma}
 
-\begin{theorem}\label{th:main} $\sigcnn=\frac{\cscale}{\sqrt{w\wconv}}$  in \Cref{assmp:main}. As $w\ra\infty$, with  $\bcnn = \ \left(\dconv \sigcnn^{2(\dconv-1)}\sigfc^{2\dfc}+\dfc \sigcnn^{2\dconv}\sigfc^{2(\dfc-1)}\right)$ for CNN we have
+\begin{theorem}\label{th:mainconv} Let $\sigcnn=\frac{\cscale}{\sqrt{w\wconv}}$ for the convolutional layers and $\sigfc=\frac{\cscale}{\sqrt{w}}$ for FC layers. Under \Cref{assmp:main}, as $w\ra\infty$, with  $\bcnn = \ \left(\dconv \sigcnn^{2(\dconv-1)}\sigfc^{2\dfc}+\dfc \sigcnn^{2\dconv}\sigfc^{2(\dfc-1)}\right)$ we have:
 \begin{align*}
-\kv_{\Tdgn_0}\ra \frac{\bcnn}{{\din}^2} \cdot H_{\Tf_0},\,\,\text{(for GAP)}\\
-\kv_{\Tdgn_0}\ra {\bcnn} \cdot H_{\Tf_0},\,\,\text{(for GMP)}\\
+&\kv_{\Tdgn_0}&\ra&\quad \frac{\bcnn}{{\din}^2} \cdot H^{\text{cnn}}_{\Tf_0},\,\,\text{(for global-average-pooling)}\\
+&\kv_{\Tdgn_0}&\ra& \quad{\bcnn} \cdot H^{\text{cnn}}_{\Tf_0},\,\,\text{(for global-max-pooling)}\\
 \end{align*}
 \end{theorem}
 
