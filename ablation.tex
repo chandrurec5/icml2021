@@ -1,5 +1,4 @@
-\FloatBarrier
-\begin{figure}[h]
+\begin{figure}
 \resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.5]{figs/ablation.png}
 }
@@ -21,8 +20,7 @@ ReLU& \centering$98.5\%$ & \centering$80.4\%$&\\\hline
 \caption{Shows test accuracies in each of the $4$ different regimes. In all the $4$ regimes (FC as well as CNN) the results averaged over the $48$ different modes. In all cases, standard deviation was less than $0.5\%$.}
 \end{table}
 \end{comment}
-\FloatBarrier
-\begin{table}[h]
+\begin{table}
 \centering
 \resizebox{\columnwidth}{!}{
 \begin{tabular}{|p{1.75cm}|c|c|c|c|c|}\hline
@@ -31,5 +29,6 @@ ReLU& \centering$98.5\%$ & \centering$80.4\%$&\\\hline
 \centering{CNN (CIFAR-10)}&$67.5\%$ &$67.6\%$   &$77.6\%$ &$79.4\%$ &$80.4\%$\\\hline
 \end{tabular}
 }
-\caption{Shows test accuracies in each of the $4$ different regimes.  \textbf{In all the $\mathbf{4}$ regimes (FC as well as CNN) the results in this table are averaged over the $\mathbf{48}$ different modes. In all cases, standard deviation was less than $\mathbf{0.5\%}$}.}
+\caption{Shows test accuracies in each of the $4$ different regimes.  \textbf{In all the $\mathbf{4}$ regimes (FC as well as CNN) the results in this table are averaged over the $\mathbf{48}$ different models ($\mathbf{24\times 2}=48$ models). In all cases, standard deviation was less than $\mathbf{0.5\%}$ and hence not mentioned in the table}.}
+\label{tb:ablation}
 \end{table}
