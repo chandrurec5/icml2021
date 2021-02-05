@@ -43,7 +43,7 @@ $
 &\stackrel{(b)}\propto \langle x,x'\rangle\cdot \Pi_{l=1}^{d-1} \frac{H^{\text{lyr}}_{l,\Tf_0}(x,x')}{w}
 \end{align*}
 \end{theorem}
-In \Cref{th:main} $(a)$, was already shown in {Theorem $5.1$}, \cite{npk}, and $(b)$ follows from \Cref{lm:productkernel}. Also, it is known from prior results \cite{arora2019exact,cao2019generalization} that training and generalisation is characterised by the NTK, and \Cref{th:main} (as well as {Theorem $5.1$}, \cite{npk}) shows that learning with fixed gates is characterised by the NPK. The implications of \Cref{th:main} are listed below.
+In \Cref{th:main}, $(a)$ was already shown in {Theorem $5.1$}, \cite{npk}, and $(b)$ follows from \Cref{lm:productkernel}. Also, it is known from prior results \cite{arora2019exact,cao2019generalization} that training and generalisation is characterised by the NTK, and \Cref{th:main} (as well as {Theorem $5.1$}, \cite{npk}) shows that learning with fixed gates is characterised by the NPK. The implications of \Cref{th:main} are listed below.
 
 $\bullet$ \textbf{Role of Weights:}  The weights of the feature network that dictate the NPFs (and hence the NPK) are more critical than the NPV (as long as the NPV is chosen as per \Cref{assmp:main}). Thus, the primary role of the weights is to generate the gates, i.e., the NPFs/NPK. In particular, copying the weights of a pre-trained DNN onto the feature network and training the NPV from scratch recovers the test accuracy of original pre-trained DNN within $1\%$ (see \Cref{sec:exp}). 
 
