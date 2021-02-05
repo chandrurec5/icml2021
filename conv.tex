@@ -12,7 +12,7 @@
 %\subsection{Circular Convolution With Pooling}
 In this section, we define NPFs and NPV in the presence of convolution with pooling. This requires three key steps (i) treating pooling layers like gates/masks (\Cref{def:pooling}) (ii) bundling together the paths that share the same path value (due to weight sharing in convolutions) \Cref{def:bundle}, and (iii) re-defining the NPF and NPV for bundles \Cref{def:convnps}. Weight sharing due to convolutions and pooling makes the NPK rotationally invariant \Cref{lm:cnnnpk}.
 
-We consider (w.l.o.g) a $1$-dimensional convolutional neural network with circular convolutions, with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer as well as the width of the FC is $w$. 
+We consider (w.l.o.g) a $1$-dimensional convolutional neural network with circular convolutions (see \Cref{tb:cconv} for primal view of information flow), with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer as well as the width of the FC is $w$. 
 
 \begin{definition}[Circular Convolution]
 For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
@@ -23,7 +23,7 @@ For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
 
 (iii) $q_{x,\Theta}(\ifout,\iout,l)=\sum_{\icin,\iin}\Theta(\icin,\iin,\iout,l)\cdot z_{x,\Theta}(\ifout\oplus (\icin-1),\iin,l-1)$, where $\iin/\iout$ are the indices (taking values in $[w]$) of the input/output filters. $\icin$ denotes the indices of the convolutional window (taking values in $[\wconv]$) between input and output filters $\iin$ and $\iout$. $\ifout$ denotes the indices (taking values in $[\din]$, the dimension of input features) of individual nodes in a given output filter.
 \end{definition}
-\begin{definition}\label{def:pooling}[Pooling]
+\begin{definition}[Pooling]\label{def:pooling}
 Let $G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1)$ denote the pooling mask, then we have
 \centerline{\resizebox{\columnwidth}{!}{
 $z_{x,\Theta}(\iout, \dc+1) =\sum_{\ifout} z_{x,\Theta}(\ifout,\iout,\dc)\cdot G^{\text{pool}}_{x,\Theta}(\ifout,\iout,\dc+1),$

@@ -1,310 +1,242 @@
 \newpage
+\onecolumn
 \begin{center}
 {\Large{\textbf{Appendix}}}
 \end{center}
 
 \begin{appendix}
-\section{Expression for $K^{(d)}$}\label{sec:kd}
-The $K^{(d)}$ matrix is computed by the recursion in \eqref{eq:ntkold}.
-\begin{align}\label{eq:ntkold}
-&\tilde{K}^{(1)}(s,s')=\Sigma^{(1)}(s,s')=\Sigma(s,s'), M^{(l)}_{ss'}=\left[\begin{matrix}\Sigma^{(l)}(s,s) & \Sigma^{(l)}(s,s')\\ \Sigma^{(l)}(s',s) & \Sigma^{(l)}(s',s')\end{matrix}\right]\in \R^2,\nn\\
-&\Sigma^{(l+1)}(s,s')= 2\cdot\mathbb{E}_{(q,q')\sim N(0,M_{ss'}^{(l)})} \left[\chi(q)\chi(q')\right], \hat{\Sigma}^{(l+1)}(s,s')= 2\cdot\mathbb{E}_{(q,q')\sim N(0,M_{ss'}^{(l)})}\left[\partial\chi(q)\partial{\chi}(q')\right],\nn\\
-&\tilde{K}^{(l+1)}=\tilde{K}^{(l)}\odot \hat{\Sigma}^{(l+1)}+\Sigma^{(l+1)}, K^{(d)}=\left(\tilde{K}^{(d)}+\Sigma^{(d)}\right)/2
-\end{align}
-where $s,s'\in[n]$ are two input examples in the dataset, $\Sigma$ is the data Gram matrix, $\partial{\chi}$ stands for the derivative of the activation function with respect to the pre-activation input, $N(0,M)$ stands for the mean-zero Gaussian distribution with co-variance matrix $M$.
-
-
-
+\input{cnn}
 \section{Proofs of technical results}
-\textbf{Proof of \Cref{prop:basic}}
+
+Proof of \Cref{prop:bundle}
 \begin{proof}
-We know that $e_t=(e_t(s),s\in[n])\in\R^n$, and $e_t(s)=\hat{y}_{\Theta_t}(x_s)-y(s)$. Now
-\begin{align} 
-L_{\Theta_t}&=\frac{1}2\sum_{s'=1}^n(\hat{y}_{\Theta_t}-y)^2\nn\\
-&=\frac{1}2\sum_{s'=1}^n e_t^2\nn\\
-\nabla_{\Theta} L_{\Theta_t}&= \sum_{s'=1}^n\nabla_{\Theta} \hat{y}_{\Theta_t}(x_{s'})e_t(s')\nn\\
-\label{eq:above1} \nabla_{\Theta} L_{\Theta_t}&= \sum_{s'=1}^n \psi_{x_{s'},\Theta_t}e_t(s')
-\end{align}
-For gradient descent, $\dot{\Theta}_t=-\nabla_{\Theta} L_{\Theta_t}$, from \eqref{eq:above1} it follows that 
-\begin{align}
-\dot{\Theta}_t=-\sum_{s'=1}^n \psi_{x_{s'},\Theta_t}e_t(s')
-\end{align}
-Now $\dot{e}_t=\dot{\hat{y}}_{\Theta_t}$, and expanding $\dot{\hat{y}}_{\Theta_t}(x_s)$ for some $s\in[n]$, we have:
-\begin{align}
-\dot{\hat{y}}_{\Theta_t}(x_s)&=\frac{d \hat{y}_{\Theta_t}(x_s)}{d t}\nn\\
-&=\sum_{\theta\in\Theta}\frac{d \hat{y}_{\Theta_t}(x_s)}{d \theta}\frac{d \theta_t}{dt},\,\text{by expressing this summation as a dot product we obtain} \nn\\
-\dot{\hat{y}}_{\Theta_t}(x_s)&=\ip{\psi_{x_s,\Theta_t},\dot{\Theta}_t}
-\end{align}
-We now use that fact that $\Theta_t$ is updated by gradient descent
-\begin{align}
-\dot{\hat{y}}_{\Theta_t}(x_s)&=-\ip{\psi_{x_s,\Theta_t},\sum_{s'=1}^n \psi_{x_{s'},\Theta_t}e_t(s')}\nn\\
-&=-\sum_{s'=1}^n K_{\Theta_t}(s,s')e_t(s')
-\end{align}
-The proof is complete by recalling that $\hat{y}_{\Theta_t}=(\hat{y}_{\Theta_t}(x_s),s\in[n])$, and $\dot{e}_t=\dot{\hat{y}}_{\Theta_t}$.
+Note that the total number of paths is $P=\din\cdot (\wconv\cdot w)^{\dc} \cdot \wfc^{(\dfc-1)}$, and in the definition of NPV for CNNs in \Cref{def:bundle} the indices are over only the weights without specifying the input node given by $\Ifeat_{0}(p)$.
+\end{proof}
+
+\begin{proposition}[Rotational Invariance]\label{prop:rot}
+Internal variables in the convolutional layers are circularly symmetric,  i.e., for $r\in\{0,\ldots,\din-1\}$ it follows that (i) $z_{rot(x,r),\Theta}(\ifout,\cdot,\cdot) = z_{x,\Theta}(\ifout \oplus r,\cdot,\cdot)$, (ii) $q_{rot(x,r),\Theta}(\ifout,\cdot,\cdot) = q_{x,\Theta}(\ifout \oplus r,\cdot,\cdot)$ and (iii) $G_{rot(x,r),\Theta}(\ifout,\cdot,\cdot) = G_{x,\Theta}(\ifout \oplus r,\cdot,\cdot)$.
+\end{proposition}
+
+
+\begin{proof}
+For $l=0$, we have $z_{rot(x,r),\Theta}(\ifout, 1, 0) = rot(x,r)(\ifout)= x(\ifout\oplus r) = z_{x,\Theta}(\ifout\oplus r, 1,0)$. Now for $l=1$, we have
+\begin{align*}
+q_{rot(x,r),\Theta}(\ifout,\cdot,1) &= \sum_{\iin\in[1],\icin\in[\wconv]}\Theta(\icin,\iin,\iout,l)\cdot z_{rot(x,r),\Theta}(\ifout \oplus(\icin-1),\iin,0)\\
+&= \sum_{\iin\in[1],\icin\in[\wconv]}\Theta(\icin,\iin,\iout,l)\cdot z_{x,\Theta}((\ifout\oplus r) \oplus (\icin-1),\iin,0)\\
+&= q_{x,\Theta}(\ifout\oplus r,\cdot,1) 
+\end{align*}
+The proof follows by noting that $G=\mathbf{1}_{\{q>0\}}$, and $z=q\cdot G$, and repeating the above argument for the layer $l=2,\ldots, \dc$.
 \end{proof}
 
 
-\textbf{Proof of \Cref{prop:zero}}
-\begin{proof}
-Let $x\in\R^{\din}$ be the input to the DNN and $\hat{y}_{\Theta}(x)$ be its output. The output can be written in terms of the final hidden layer output as:
-\begin{align}
-\hat{y}_{\Theta}(x)&=\sum_{j_{d-1}=1}^w\Theta(1, j_{d-1},d) \cdot z_{x,\Theta}(j_{d-1},d-1)\nn\\
-\label{lastlayer}&=\sum_{j_{d-1}=1}^w\Theta(1, j_{d-1},d) \cdot G_{x\Theta}(j_{d-1},d-1)\cdot q_{x,\Theta}(j_{d-1},d-1)
-\end{align}
-Now $q_{x,\Theta}(j_{d-1},d-1)$ for a fixed $j_{d-1}$ can again be expanded as
-\begin{align}
-q_{x,\Theta}(j_{d-1},d-1)&= \sum_{j_{d-2}=1}^w \Theta(j_{d-1},j_{d-2},d-1) \cdot z_{x,\Theta}(j_{d-2},d-2)\nn\\
-\label{onebefore}&=\sum_{j_{d-2}=1}^w \Theta(j_{d-1},j_{d-2},d-1) \cdot G_{x,\Theta}(j_{d-2},d-2)\cdot q_{x,\Theta}(j_{d-2},d-2)
-\end{align}
-Now plugging in \eqref{onebefore} in the expression in \eqref{lastlayer}, we have
-\begin{align}
-\hat{y}_{\Theta}(x)&=\sum_{j_{d-1}=1}^w\Theta(1, j_{d-1},d)\cdot G_{x\Theta}(j_{d-1},d-1)\Bigg(\sum_{j_{d-2}=1}^w \Theta(j_{d-1},j_{d-2},d-1)\nn\\ &\hspace{15pt}\cdot G_{x,\Theta}(j_{d-2},d-2)\cdot q_{x,\Theta}(j_{d-2},d-2)\Bigg)\nn\\
-&=\sum_{j_{d-1}, j_{d-2}\in[w]} G_{x,\Theta}(j_{d-1},d-1)\cdot G_{x,\Theta}(j_{d-2},d-2)\cdot\Theta(1, j_{d-1},d)\nn\\&\cdot \Theta(j_{d-1},j_{d-2},d-1)\cdot q_{x,\Theta}(j_{d-2},d-2)\nn\\
-\end{align}
-By expanding $q$'s for all the previous layers till the input layer we have
-\begin{align}
-\hat{y}_{\Theta}(x)=\sum_{j_{d}=1, j_{d-1},\ldots,j_{1}\in[w], j\in[\din]} x(j) \Pi_{l=1}^{d-1}G_{x,\Theta}(j_{l},l) \Pi_{l=1}^{d}\Theta(j_l, j_{l-1}, l) \nn
-\end{align}
-\end{proof}
-
-\textbf{Proof of \Cref{lm:npk}}
+Proof of \Cref{lm:sumofproduct}
 \begin{proof}
 \begin{align}
 \ip{\phi_{x_s,\Theta},\phi_{x_{s'},\Theta}}&=\sum_{p\in[P]}x_s(\I_0(p))x_{s'}(\I_0(p))A_{\Theta}(x_s,p)A_{\Theta}(x_{s'},p)\nn\\
-&=\sum_{i=1}^{\din}x_s(i)x_{s'}(i)\Lambda_{\Theta}(s,s')\nn\\
-&=\ip{x_s,x_{s'}}\cdot\Lambda_{\Theta}(s,s')
+&=\sum_{i=1}^{\din}x_s(i)x_{s'}(i)\Lambda_{\Theta}(i,x_s,x_{s'})\nn\\
+&=\ip{x_s,x_{s'}}_{\Lambda_{\Theta}(\cdot,x_s,x_{s'})}
 \end{align}
+Owing to the symmetry in a fully connected network, we have $\Lambda(i,x_s,x_{s'})$ to be the same for all values of $i\in[\din]$. And since $H^{\text{lyr}}_{l,\Theta}(s,s')$ measure the number of gates in layer `$l$' that are active for both inputs $x_s$ and $x_{s'}$, the total number of paths active for both inputs is $\Pi_{l=1}^{(d-1)} H^{\text{lyr}}_{l,\Theta}(s,s')$.
 \end{proof}
 
-    \textbf{Proof of \Cref{prop:ntknew}}
+Proof of \Cref{lm:sumofproduct}
 \begin{proof}
-Let $\Psi_{\Theta}=(\psi_{x_s,\Theta},s\in[n])\in\R^{\dnet\times n}$ be the NTF matrix, then the NTK matrix is given by $K_{\Theta_t}=\Psi^\top_{\Theta_t}\Psi_{\Theta_t}$. Note that, $\hat{y}_{\Theta}(x_s)=\ip{\phi_{x_s,\Theta},v_{\Theta}}=\ip{v_{\Theta},\phi_{x_s,\Theta}}=v^\top_{\Theta}\phi_{x_s,\Theta}$. Now $\psi_{x_{s},\Theta}=\nabla_{\Theta} v_{\Theta}\phi_{x_s,\Theta}$, and hence $\Psi=\nabla_{\Theta} v_{\Theta}\Phi_{\Theta}$. Hence, $K_{\Theta_t}=\Psi^\top_{\Theta_t}\Psi_{\Theta_t}=\Phi^\top_{\Theta}(\nabla_{\Theta} v_{\Theta})^\top (\nabla_{\Theta} v_{\Theta})\Phi_{\Theta}=\Phi^\top_{\Theta}\V_{\Theta}\Phi_{\Theta}$.
+Proof is complete by noting that the NPF of the ResNet is a concatenation of the NPFs of the $2^b$ distinct sub-FC-DNNs within the ResNet architecture.
 \end{proof}
 
-\textbf{Proof of \Cref{prop:dnnhard}}
 
+Proof of \Cref{lm:cnnnpk}
 \begin{proof}
-Follows in a similar manner as the proof of \Cref{prop:basic}.
+For the CNN architecture considered in this paper, each bundle has exactly $\din$ number of paths, each one corresponding to a distinct input node. For a bundle $b_{\hat{p}}$, let $b_{\hat{p}}(i),i\in[\din]$ denote the path starting from input node $i$.
+\begin{align*}
+&\sum_{\hat{p}\in [\hat{P}]} \Bigg(\sum_{i,i'\in[\din]} x(i) x'(i') A_{\Theta}\left(x,b_{\hat{p}}(i)\right) A_{\Theta}\left(x',b_{\hat{p}}(i')\right) \Bigg)\\
+=&\sum_{\hat{p}\in [\hat{P}]}\Bigg(\sum_{i\in[\din],i'=i\oplus r, r\in\{0,\ldots,\din-1\}} x(i) x'(i\oplus r) A_{\Theta}\left(x,b_{\hat{p}}(i)\right) A_{\Theta}\left(x',b_{\hat{p}}(i\oplus r)\right)\Bigg)\\
+=&\sum_{\hat{p}\in [\hat{P}]}\Bigg(\sum_{i\in[\din], r\in\{0,\ldots,\din-1\}} x(i) rot(x',r)(i) A_{\Theta}\left(x,b_{\hat{p}}(i)\right) A_{\Theta}\left(rot(x',r),b_{\hat{p}}(i)\right)\Bigg)\\
+=&\sum_{r=0}^{\din-1} \Bigg(\sum_{i\in[\din]} x(i) rot(x',r)(i) \sum_{\hat{p}\in [\hat{P}]}  A_{\Theta}\left(x,b_{\hat{p}}(i)\right) A_{\Theta}\left(rot(x',r),b_{\hat{p}}(i)\right)\Bigg)\\
+=&\sum_{r=0}^{\din-1}\Bigg(\sum_{i\in[\din]} x(i) rot(x',r)(i) \Lambda_{\Theta}(i,x,rot(x',r))\Bigg)\\
+=&\sum_{r=0}^{\din-1} \ip{x,rot(x',r)}_{\Lambda_{\Theta}(\cdot,x,rot(x',r))}
+\end{align*}
 \end{proof}
 
-\textbf{Proof of {\Cref{prop:condition}}}
-\begin{proof}
-$\rho_{\min}(K_{\Theta})=\underset{\norm{x}_2=1}{\underset{x\in \R^n}\min}x^\top K_{\Theta} x$. Let $x'\in\R^n$ such that $\norm{x'}_2=1$ and $\rho_{\min}(H_{\Theta})={x'}^\top H_{\Theta} x'$. Now, $\rho_{\min}(K_{\Theta})\leq {x'}^\top K_{\Theta} x'$. 
-Let $y'=\Phi x'$, then we have, $\rho_{\min}(K_{\Theta})\leq {y'}^\top \V_{\Theta}y'$. Hence $\rho_{\min}(K_{\Theta})\leq \norm{y'}^2_2 \rho_{\max}(\V_{\Theta})$. Proof is complete by noting that $\norm{y'}^2_2={x'}^\top \Phi^\top_{\Theta}\Phi_{\Theta}x'= \rho_{\min}(H_{\Theta})$.
-\end{proof}
+Proof of \Cref{th:main} follows in the same manner as the proof Theorem~$5.1$ of \citeauthor{ch2020neural} (2020).
 
-
-\textbf{Proof of \Cref{prop:dgn}}
-
-\begin{proof}
-Follows in a similar manner as proof of \Cref{prop:basic}.
-\end{proof}
-
-\subsection{Proof of \Cref{th:main}}
-\subsubsection{Calculation of $\E{K^\text{v}_{\Tdgn_0}}$}
-
-\begin{proposition}
-Let $\tv\in\Tv$ be a weight in layer $l_{\tv}$, and let $p$ be a path that passes through $\tv$. Then 
-\begin{align}
-\partial_{\tv} v_{\Tv}(p) =& \Pi_{l=1,l\neq l_{\tv}}^{d} \Theta(\I_{l}(p),\I_{l-1}(p),l )
-\end{align}
-\end{proposition}
-\begin{proof}
-Proof follows by noting that $v_{\Tv}(p)=\Pi_{l=1}^{d}\Theta(\I_l(p),\I_{l-1}(p),l)$.
-\end{proof}
-
-
+\begin{comment}
 \begin{lemma}\label{lm:dot}
-Let $\varphi_{p,\Theta}$ be as in \Cref{def:npvgrad}, under the assumption in ~\Cref{th:main}, for paths $p_1,p_2\in [P], p_1\neq p_2$, at initialisation we have (i) $\E{\ip{\varphi_{p_1,\Tv_0}, \varphi_{p_2,\Tv_0}}}= 0$, (ii) ${\ip{\varphi_{p_1,\Tv_0}, \varphi_{p_1,\Tv_0}}}= d\cdot \sigma^{2(d-1)}$.
+Let $\varphi_{p,\Theta}$ be as in \Cref{def:npvgrad}, under Assumption~\ref{assmp:main}, for paths $p,p_1,p_2\in \P, p_1\neq p_2$, at initialisation we have (i) $\E{\ip{\varphi_{p_1,\Tv_0}, \varphi_{p_2,\Tv_0}}}= 0$, (ii) ${\ip{\varphi_{p,\Tv_0}, \varphi_{p,\Tv_0}}}= d\sigma^{2(d-1)}$.
 \end{lemma}
 
 \begin{proof}
 \begin{align*}
 \ip{\varphi_{p_1,\Tv_0}, \varphi_{p_2,\Tv_0}}= \sum_{\tv\in \Tv} \partial_{\tv}v_{\Tv_0}(p_1) \partial_{\tv}v_{\Tv_0}(p_2)
 \end{align*}
-Let $\tv\in\Tv$ be an arbitrary weight. If either $p_1$ or $p_2$ does not pass through $\tv$, then it follows that $\partial_{\tv} v_{\Tv_0}(p_1) \partial_{\tv} v_{\Tv_0}(p_2)=0$. Let us consider the the case when $p_1,p_2$ pass through $\tv$ and without of loss of generality let $\tv$ belong to layer $l_{\tv}\in[d]$. 
-  we have
+Let $p\rsa(\cdot)$ denote the fact that path $p$ passes through $(\cdot)$, and let $p\bcancel\rsa(\cdot)$ denote the fact that path $p$ does not pass through $\bcancel\rsa$. Let $\tv\in\Tv$ be any weight such that $p\rsa \tv$, and w.l.o.g let $\tv$ belong to layer $l'\in[d]$. If either $p_1\bcancel{\rsa}\tv$ or $p_2\bcancel{\rsa}\tv$, then it follows that $\partial_{\tv} v_{\Tv_0}(p_1) \partial_{\tv} v_{\Tv_0}(p_2)=0$. In the case when $p_1,p_2\rsa\tv$, we have
 \begin{align*}
 &\E{\partial_{\tv}v_{\Tv_0}(p_1)\partial_{\tv}v_{\Tv_0}(p_2)}\\
-&=\E{\underset{l\neq l_{\tv}}{\underset{l=1}{\overset{d}{\Pi}}} \Bigg(\Tv_0(\I_{l} (p_1),  \I_{l-1}(p_1),l) \Tv_0(\I_{l}(p_2),\I_{l-1} (p_2),l) \Bigg)}\\
-&=\underset{l\neq l_{\tv}}{\underset{l=1}{\overset{d}{\Pi}}}\E{\Tv_0(\I_{l}(p_1),\I_{l-1}(p_1),l)\Tv_0(\I_{l}(p_2),\I_{l-1}(p_2),l)}
+&=\E{\underset{l\neq l'}{\underset{l=1}{\overset{d}{\Pi}}} \Bigg(\Tv_0(l, \I_{l-1}(p_1),\I_{l} (p_1))\Tv_0(l,\I_{l-1} (p_2),\I_{l}(p_2)) \Bigg)}\\
+&=\underset{l\neq l'}{\underset{l=1}{\overset{d}{\Pi}}}\E{\Tv_0(l,\I_{l-1}(p_1),\I_{l}(p_1))\Tv_0(l,\I_{l-1}(p_2),\I_{l}(p_2))}
 \end{align*}
 where the $\E{\cdot}$ moved inside the product because at initialisation the weights (of different layers) are independent of each other.
-Since $p_1\neq p_2$, there exist a layer $\tilde{l}\in[d],\tilde{l}\neq l_{\tv}$ such that they do not pass through the same weight in layer $\tilde{l}$, i.e., $\Tv_0(\I_{\tilde{l}}(p_1),\I_{\tilde{l}-1}(p_1),\tilde{l},)$ and $\Tv_0(\I_{\tilde{l}}(p_2),\I_{\tilde{l}-1}(p_2),\tilde{l})$ are distinct weights. Using this fact,  we have 
+Since $p_1\neq p_2$, in one of the layers $\tilde{l}\in[d-1],\tilde{l}\neq l'$ they do not pass through the same weight, i.e., $\Tv_0(\tilde{l},\I_{\tilde{l}-1}(p_1),\I_{\tilde{l}}(p_1))$ and $\Tv_0(\tilde{l},\I_{\tilde{l}-1}(p_2),\I_{\tilde{l}}(p_2))$ are distinct weights. Using this fact
 \begin{align*}
 &\E{\partial_{\tv}v_{\Tv_0}(p_1)\partial_{\tv}v_{\Tv_0}(p_2)}\\
-=&\Bigg(\underset{l\neq l_{\tv},\tilde{l}}{\underset{l=1}{\overset{d}{\Pi}}}\E{\Tv_0(\I_l(p_1), \I_{l-1}(p_1),l)\Tv_0(\I_{l}(p_2),\I_{l-1}(p_2),l)}\Bigg)\\
-&\cdot\Bigg(\E{\Tv_0(\I_{\tilde{l}}(p_1),\I_{\tilde{l}-1} (p_1),\tilde{l})}\E{\Tv_0(\I_{\tilde{l}}(p_2), \I_{\tilde{l}-1 }(p_2),\tilde{l})}\Bigg)\\
-=&0
+&=\underset{l\neq l',\tilde{l}}{\underset{l=1}{\overset{d}{\Pi}}}\E{\Tv_0(l, \I_{l-1}(p_1),\I_l(p_1))\Tv_0(l,\I_{l-1}(p_2),\I_{l}(p_2))}\\
+&=\E{\Tv_0(\tilde{l},\I_{\tilde{l}-1} (p_1),\I_{\tilde{l}}(p_1))}\E{\Tv_0(\tilde{l},\I_{\tilde{l}-1 }(p_2),\I_{\tilde{l}}(p_2))}\\
+&=0
 \end{align*}
 
-The proof of (ii) is complete by noting that a given path $p_1$ pass through only `$d$' weights, and hence $\sum_{\tv\in\Tv} \partial_{\tv}v_{\Tv_0}(p_1) \partial_{\tv}v_{\Tv_0}(p_1)$ has `$d$' non-zero terms, and the fact that at initialisation we have 
+The proof of (ii) is complete by noting that $\sum_{\tv\in\Tv} \partial_{\tv}v_{\Tv_0}(p) \partial_{\tv}v_{\Tv_0}(p)$ has $d$ non-zero terms for a single path $p$ and at initialisation we have 
 \begin{align*}
-&\partial_{\tv}v_{\Tv_0}(p_1) \partial_{\tv}v_{\Tv_0}(p_1) \\
-&=\underset{l\neq l_{\tv}}{\underset{l=1}{\overset{d}{\Pi}}} [\Tv_0(\I_{l}(p),\I_{l-1}(p),l)]^2\\
+&\partial_{\tv}v_{\Tv_0}(p) \partial_{\tv}v_{\Tv_0}(p) \\
+&={\underset{l\neq l'}{\underset{l=1}{\overset{d}{\Pi}}} {\Tv_0}^2(l,\I_{l-1}(p),\I_{l}(p))}\\
 &=\sigma^{2(d-1)}
 \end{align*}
 \end{proof}
 
-
-
-\begin{theorem}\label{th:exp}
- $\E{K^{\text{v}}_{\Tdgn_0}}=d\cdot\sigma^{2(d-1)} \cdot H_{\text{FNPF}}$. 
+\textbf{Detailed version of \Cref{th:main} with proof.}
+\begin{theorem}\label{th:mainrefined}
+Under \Cref{assmp:main}, and $\frac{4d}{w^2}<1$ it follows that
+ \begin{align*}
+\E{K_{\Tdgn_0}}&=d\cdot\sigma^{2(d-1)} H_{\text{FNPF}}\\
+Var\left[K_{\Tdgn_0}(s,s')\right]&\leq O\left(d^2_{in}\sigma^{4(d-1)}\max\{d^2w^{2(d-2)+1}, d^3w^{2(d-2)}\}\right)
+\end{align*}
 \end{theorem}
+
 \begin{proof}
-Let $\Phi_{\text{FNPF}}=\Phi_{\Tf_0}=\left(\phi_{x_s,\Tf_0}, s\in[n]\right)\in\R^{P\times n}$ be the NPF matrix. 
+We have 
 \begin{align*}
-\E{K^{\text{v}}_{\Tdgn_0}}&=\E{\Phi^\top_{\text{FNPF}} \V_{\Tv_0} \Phi_{\text{FNPF}}}\\
+\E{K_{\Tdgn_0}}&=\E{\Phi^\top_{\text{FNPF}} \V_{\Tv_0} \Phi_{\text{FNPF}}}\\
 &=\E{\Phi^\top_{\text{FNPF}} (\nabla_{\Tv}v_{\Tv_0})^\top (\nabla_{\Tv}v_{\Tv_0}) \Phi_{\text{FNPF}}}\\
-&=\Phi^\top_{\text{FNPF}}\left( \E{(\nabla_{\Tv}v_{\Tv_0})^\top (\nabla_{\Tv}v_{\Tv_0})}\right)\Phi_{\text{FNPF}}\\
-&\stackrel{(a)}=d\cdot\sigma^{2(d-1)} \cdot\left(\Phi^\top_{\text{FNPF}}\Phi_{\text{FNPF}}\right)\\
-&=d\cdot\sigma^{2(d-1)} \cdot H_{\text{FNPF}}
+&=\Phi^\top_{\text{FNPF}} \E{(\nabla_{\Tv}v_{\Tv_0})^\top (\nabla_{\Tv}v_{\Tv_0})}\Phi_{\text{FNPF}}\\
+&\stackrel{(a)}=d\cdot\sigma^{2(d-1)} \Phi^\top_{\text{FNPF}}\Phi_{\text{FNPF}}\\
+&=d\cdot\sigma^{2(d-1)} H_{\text{FNPF}}
 \end{align*}
-Here, $(a)$ follows from  \Cref{lm:dot}, i.e., $\E{(\nabla_{\Tv}v_{\Tv_0})^\top (\nabla_{\Tv}v_{\Tv_0})}= d\cdot\sigma^{2(d-1)}\cdot I_{P\times P}$, where $I_{P\times P}$ is a ${P\times P}$ identity matrix.
-\end{proof}
+where, $(a)$ follows from \Cref{lm:dot}.
 
-\subsubsection{Calculation of $Var\left[K^\text{v}_{\Tdgn_0}\right]$}
+We now turn to the variance calculation. The idea is that we expand  $Var\left[K_0(s,s')\right]=\E{K_0(s,s')^2} -\E{K_0(s,s')}^2$ and identify the terms which cancel due to subtraction and then bound the rest of the terms.
 
-\input{varproof}
+\textbf{Notation:} In what follows, we let $K_0$ to denote $K_{\Tdgn_0}$ and drop superscript V from $\Tv_0$, and subscript $\Tv_0$ from $v_{\Tv_0}$. Further, we assume that the weights can be enumerated as $\theta(1),\ldots, \theta(d_{net})$. We also denote $p\rsa (\cdot)$ to denote the fact that path $p$ passes through $(\cdot)$ and $p\bcancel{\rsa}(\cdot)$ to denote the fact that path $p$ does not pass through $(\cdot)$. We use a shortcut notation $A(s,p)$ instead of $A(x_s,p)$. In what follows, we let $x\in\R^{\din\times n}$ to be the data matrix.
 
-\textbf{Proof of\Cref{th:main}}
-\begin{proof} Follows from \Cref{th:exp} and \Cref{th:var}.
-\end{proof}
+ Let $\theta(m),m\in[d_{net}]$ belong to layer $l'(m)$, then 
+\begin{align}\label{eq:kexpect} 
+&\E{K_0(s,s')}\nn\\
+&=\sum_{m=1}^{d_{net}}\E{\left(\sum_{p_1 \in[P]}x(\I_0(p_1),s)A_0(s,p_1)\frac{\partial v_0(p_1)}{\partial \theta(m)}\right)\left(\sum_{p_2\in[P]}x(\I_0(p_2),s)A_0(s',p_2)\frac{\partial v_0(p_2)}{\partial \theta(m)}\right)}\nn\\
+&=\sum_{m=1}^{d_{net}}\E{\sum_{p_1,p_2\in[P]}x(\I_0(p_1),s)A_0(s,p_1)\frac{\partial v_0(p_1)}{\partial \theta(m)}x(\I_0(p_2),s')A_0(s',p_2)\frac{\partial v_0(p_2)}{\partial \theta(m)}}\nn\\
+&\stackrel{(a)}=\sum_{m=1}^{d_{net}}\underset{p_1,p_2\rsa\theta(m)}{\sum_{p_1,p_2\in[P]}}x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2) \mathbb{E}\Bigg[\underset{l\neq l'(m)}{\underset{l=1}{\overset{d-1}{\Pi}}} \Tb_0(l,\I_{l-1}(p_1),\I_{l}(p_1)) \nn\\&\Tb_0(l,\I_{l-1}(p_2),\I_{l}(p_2))\Bigg]\nn\\
+&\stackrel{(b)}=\sum_{m=1}^{d_{net}}\underset{p_1,p_2\rsa\theta(m)}{\sum_{p_1,p_2\in[P]}}x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2) \underset{l\neq l'(m)}{\underset{l=1}{\overset{d-1}{\Pi}}} \mathbb{E}\Bigg[ \Tb_0(l,\I_{l-1}(p_1),\I_{l}(p_1))\nn\\
+& \Tb_0(l,\I_{l-1}(p_2),\I_{l}(p_2))\Bigg]
+\end{align}
+where $(a)$ follows from the fact that for $p\bcancel{\rsa}\theta(m)$, $\frac{\partial v_0(p)}{\partial \theta(m)}=0$, and $(b)$ follows from the fact that at initialisation the layer weights are independent of each other. Note that the right hand side of \eqref{eq:kexpect} only terms with $p_1=p_2$ will survive the expectation.
 
+In the following expression in \eqref{eq:kexpectsquare}, note that only terms of the form $p_1=p_2$ and $p_3=p_4$ are non-zero.
 
-\section{Applying \Cref{th:main} In Finite Width Case}\label{sec:finite}
-In this section, we describe the technical step in applying \Cref{th:main} which requires $w\ra\infty$ to measure the information in the gates of a DNN  with finite width.  Since we are training only the value network in the FPNP mode of the DGN, it is possible to let the width of the value network alone go to $\infty$, while keeping the width of the feature network (which stores the fixed NPFs) finite. This is easily achieved by multiplying the width by a positive integer $m\in\Z_{+}$, and \emph{padding} the gates `$m$' times.
-\begin{definition}
-Define DGN${}^{(m)}$ to be the DGN whose feature network is of width $w$ and depth $d$, and whose value network  is a fully connected network of width $mw$ and depth $d$. The $mw(d-1)$ gating values are obtained by `padding' the $w(d-1)$gating values of the width `$w$', depth `$d$' feature network `$m$' times (see \Cref{fig:dgnpad}, \Cref{tb:dgnpad}). 
-\end{definition}
-\FloatBarrier
-\begin{table}[h]
-\centering
-\begin{tabular}{|  l | l |}\hline
- Feature Network (NPF)& Value Network (NPV)\\
- $z^{\text{f}}_{x}(0)=x$ &$z^{\text{v}}_{x}(0)=x$ \\
-$q^{\text{f}}_{x}(i,l)=\sum_{j} \Tf(i,j,l)\cdot z_{x}(j,l-1)$ & $q^{\text{v}}_{x}(i,l)=\sum_{j} \Tv(i,j,l)\cdot z^{\text{v}}_{x}(j,l-1)$\\
-$z^{\text{f}}_{x}(i,l)= q^{\text{f}}_{x}(i,l)\cdot\mathbbm{1}_{\{q^{\text{f}}_{x}(i,l)>0\}}$& $z^{\text{v}}_{x}(i,l)= q^{\text{v}}_{x}(i,l)\cdot G_{x}(i,l)$ \\
- None &$\hat{y}_{{\Tdgn}^{(m)}}(x)= \sum_{j} \Tv(1,j,l)\cdot z^{\text{v}}_{x}(j,d-1)$\\\hline
-\multicolumn{2}{|l|}{{Hard ReLU: $G_{x}(i,l)=\mathbbm{1}_{\{q^{\text{f}}_{x}(i,l)>0\}}$ or Soft-ReLU: $G_{x}(i,l)={1}/{\left(1+\exp(-\beta\cdot q^{\text{f}}_{x}(i,l)>0)\right)} $}}\\\hline
-\end{tabular}
-\caption{Deep Gated Network with padding. Here the gating values are padded, i.e., $ G_{x}(kw+i,l)=G_{x}(i,l),\forall k=0,1,\ldots,m-1, i\in[w]$. }
-\label{tb:dgnpad}
-\end{table}
-
-
-
-\textbf{Remark:}  DGN${}^{(m)}$ has a total of $P^{(m)}=(mw)^{(d-1)}\din$ paths. Thus, the NPF and NPV are quantities in $\R^{P^{(m)}}$. In what follows, we denote the NPF matrix of DGN${}^{(m)}$ by $\Phi^{(m)}_{\Tf_0}\in\R^{P^{(m)}\times n}$, and use $H^{(m)}_{\text{FNPF}}=(\Phi^{(m)}_{\Tf_0})^\top \Phi^{(m)}_{\Tf_0}$. 
-
-Before we proceed to state the version of \Cref{th:main} for DGN${}^{(m)}$, we will look at an equivalent definition for $\Lambda_{\Theta}$ (see \Cref{def:lambda}).
-\begin{definition}\label{def:equilambda}
-For input examples $s, s'\in[n]$ define 
-
-$1.$ $\tau_{\Theta}(s,s',l)\stackrel{def}=\sum_{i=1}^w G_{x_s,\Theta}(i,l)G_{x_{s'},\Theta}(i,l)$ be the number of activations that are ``on'' for both inputs $s,s'\in[n]$ in layer $l\in[d-1]$.
-
-$2.$ $\Lambda_{\Theta}(s,s')\stackrel{def}=\Pi_{l=1}^{d-1}\tau_{\Theta}(s,s',l)$.
-\end{definition}
-
-\FloatBarrier
-\begin{figure}[h]
-\centering
-%\resizebox{\columnwidth}{\textheight}{
-\includegraphics[scale=0.1]{figs/dgn-infty.png}
-%}
-\caption{DGN${}^{(m)}$ where the value network is of width $mw$ and depth $d$. The gates are derived by padding the gating values obtained from the feature network `$m$' times, i.e., $ G_{x}(kw+i,l)=G_{x}(i,l),\forall k=0,1,\ldots,m-1, i\in[w]$.}
-\label{fig:dgnpad}
-\end{figure}
-
-
-
-\begin{corollary}[Corollary to \Cref{th:main}] Under the same assumptions as in \Cref{th:main} with $\sigma$ replaced by $\sigma_{(m)}=\sigma/\sqrt{m}$, as $m\ra\infty$, \begin{align*}K^{\text{v}}_{\Theta^{\text{DGN}^{(m)}}_0}\ra K^{(d)}_{\text{FNPF}} = d\cdot \sigma_{(m)}^{2(d-1)} H^{(m)}_{\text{FNPF}}= d\cdot \sigma^{2(d-1)} H_{\text{FNPF}}\end{align*}
-\end{corollary}
-\begin{proof}
-Let $\Lambda^{(m)}_{\text{FNPF}}$ and $\tau^{(m)}_{\text{FNPF}}$ be quantities associated with DGN${}^{(m)}$. We know that  $H^{(m)}_{\text{FNFP}}=\Sigma\odot\Lambda^{(m)}_{\text{FNPF}}$. Dropping the subscript FNPF to avoid notational clutter, we have
 \begin{align*}
-\left(\sigma/\sqrt{m}\right)^{2(d-1)}\Lambda^{(m)}(s,s')&=\sigma^{2(d-1)}\frac{1}{m^{(d-1)}}\Pi_{l=1}^{d-1}\tau^{(m)}(s,s',l)\\
-&=\sigma^{2(d-1)}\frac{1}{m^{(d-1)}}\Pi_{l=1}^{d-1}\left(m \tau(s,s',l)\right)\\
-&=\sigma^{2(d-1)}\frac{1}{m^{(d-1)}}m^{(d-1)}\Pi_{l=1}^{d-1} \tau(s,s',l)\\
-&=\sigma^{2(d-1)}\Pi_{l=1}^{d-1} \tau(s,s',l)\\
-&=\sigma^{2(d-1)}\Lambda(s,s')
+&\E{K_0(s,s')}^2=\\
+&\Bigg(\sum_{m=1}^{d_{net}}\underset{p_1,p_2\rsa\theta(m)}{\sum_{p_1,p_2\in[P]}}x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2) \underset{l\neq l'(m)}{\underset{l=1}{\overset{d-1}{\Pi}}} \mathbb{E}\Big[\Tb_0(l,\I_{l-1}(p_1),\I_{l}(p_1)) &\\ 
+&\Tb_0(l,\I_{l-1}(p_2),\I_{l}(p_2))\Big]\Bigg)\times\\
+&\Bigg(\sum_{m'=1}^{d_{net}}\underset{p_3,p_4\rsa\theta(m')}{\sum_{p_3,p_4\in[P]}}x(\I_0(p_3),s)A_0(s,p_3)x(\I_0(p_4),s')A_0(s',p_4) \underset{l\neq l'(m')}{\underset{l=1}{\overset{d-1}{\Pi}}} \mathbb{E}\Big[\Tb_0(l,\I_{l-1}(p_3),\I_{l}(p_3)) &\\
+&\Tb_0(l,\I_{l-1}(p_4),\I_{l}(p_4))\Big]\Bigg)\\
 \end{align*}
-\end{proof}
+\begin{align}\label{eq:kexpectsquare}
+&\E{K_0(s,s')}^2=\nn\\
+&\sum_{m,m'=1}^{d_{net}}\underset{p_3,p_4\rsa\theta(m')}{\underset{p_1,p_2\rsa\theta(m)}{\sum_{p_1,p_2,p_3,p_4\in[P]}}}\Bigg[\bigg(x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2)x(\I_0(p_3),s)\nn\\ 
+&A_0(s,p_3)x(\I_0(p_4),s')A_0(s',p_4)\bigg)\times \bigg( \underset{l\neq l'(m)} {\underset{l\neq l'(m')}{\underset{l=1}{\overset{d-1}{\Pi}}}} \E{\Tb_0(l,\I_{l-1}(p_1),\I_{l}(p_1)) \Tb_0(l,\I_{l-1}(p_2),\I_{l}(p_2))}\nn\\
+&\E{\Tb_0(l,\I_{l-1}(p_3),\I_{l}(p_3)) \Tb_0(l,\I_{l-1}(p_4),\I_{l}(p_4))} \bigg)\times\nn\\
+&\bigg( \E{\Tb_0(l,\I_{l'(m')-1}(p_1),\I_{l'(m')}(p_1)) \Tb_0(l,\I_{l'(m')-1}(p_2),\I_{l'(m')}(p_2))}\bigg)\times\nn\\
+&\bigg(\E{\Tb_0(l,\I_{l'(m)-1}(p_3),\I_{l'(m)}(p_3)) \Tb_0(l,\I_{l'(m)-1}(p_4),\I_{l'(m)}(p_4))} \bigg)\Bigg]
+\end{align}
+In the expression in \eqref{eq:ksquareexpect}, paths $p_1,p_2,p_3,p_4$ do not have constraints, and can be distinct.
+\begin{align}\label{eq:ksquareexpect}
+&\E{K^2_0(s,s')}=\nn\\
+&\sum_{m,m'=1}^{d_{net}}\underset{p_3,p_4\rsa\theta(m')}{\underset{p_1,p_2\rsa\theta(m)}{\sum_{p_1,p_2,p_3,p_4\in[P]}}}\Bigg[\bigg(x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2)x(\I_0(p_3),s)\nn\\&
+A_0(s,p_3)x(\I_0(p_4),s')A_0(s',p_4)\bigg)\times\bigg( \underset{l\neq l'(m)} {\underset{l\neq l'(m')}{\underset{l=1}{\overset{d-1}{\Pi}}}} \mathbb{E}[\Tb_0(l,\I_{l-1}(p_1),\I_{l}(p_1)) \Tb_0(l,\I_{l-1}(p_2),\I_{l}(p_2))\nn\\&
+\Tb_0(l,\I_{l-1}(p_3),\I_{l}(p_3)) \Tb_0(l,\I_{l-1}(p_4),\I_{l}(p_4))] \bigg)\times\nn\\
+&\bigg( \E{\Tb_0(l,\I_{l'(m')-1}(p_1),\I_{l'(m')}(p_1)) \Tb_0(l,\I_{l'(m')-1}(p_2),\I_{l'(m')}(p_2))}\bigg)\times\nn\\
+&\bigg(\E{\Tb_0(l,\I_{l'(m)-1}(p_3),\I_{l'(m)}(p_3)) \Tb_0(l,\I_{l'(m)-1}(p_4),\I_{l'(m)}(p_4))} \bigg)\Bigg]
+\end{align}
+
+We now state the following facts/observations.
+
+$\bullet$ \emph{Fact 1:} Any term that survives the expectation (i.e., does not become $0$) and participates in \eqref{eq:ksquareexpect} is of the form $\sigma^{4(d-1)}\big(x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2)x(\I_0(p_3),s)A_0(s,p_3)x(\I_0(p_4),s')A_0(s',p_4)\big)$, where $p_1,p_2,p_3,p_4$ are free variables. Any term that survives the expectation (i.e., does not become $0$) and participates in participates in \eqref{eq:kexpectsquare} is of the form $\sigma^{4(d-1)}\big(x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2)x(\I_0(p_3),s)A_0(s,p_3)x(\I_0(p_4),s')A_0(s',p_4)\big)$, where $p_1=p_2,p_3=p_4$.
+
+$\bullet$ \emph{Fact 2:} The number of paths through a particular weight $\theta(m)$ in one of the middle layers is $\din w^{d-3}$. The number of paths through a particular weight $\theta(m)$ in the first layer is $w^{d-2}$ . The number of paths through a particular weight $\theta(m)$ in the last layer is $\din w^{d-2}$ .
 
 
-\section{DGN as a Lookup Table: Applying \Cref{th:main} to a pure memorisation task}\label{sec:mem}
+$\bullet$ \emph{Fact 3:} Let $\P'$ be an arbitrary set of paths constrained to pass through some set of weights. Let $\P''$ be the set of paths obtained by adding an additional constraint that the paths also should pass through a particular weight say $\theta(m)$. Now, if $\theta(m)$ belongs to :
 
-In this section, we modify the DGN in \Cref{fig:dgn} into a memorisation network to solve a pure memorisation task. The objective of constructing the memorisation network is to understand the roles of depth and width in \Cref{th:main} in a simplified setting. In this setting, we show increasing depth till a point helps in training and increasing depth beyond it hurts training. 
+$1.$ a middle layer, then $|\P''|=\frac{|\P'|}{w^2}$.
 
-\begin{definition}[Memorisation Network/Task]
-Given a set of values $(y_s)_{s=1}^n\in  \R$, a memorisation network (with weights $\Theta\in\R^{\dnet}$) accepts $s\in[n]$ as its input and produces $\hat{y}_{\Theta}(s)\approx y_s$ as its output. The loss of the memorisation network is defined as $L_{\Theta}=\frac{1}{2}\sum_{s=1}^n (\hat{y}_{\Theta}(s)-y_s)^2$.
-\end{definition}
+$2.$ the first layer, then $|\P''|=\frac{|\P'|}{\din w}$.
+
+$3.$  the last layer, then $|\P''|=\frac{|\P'|}{w}$.
+
+$\bullet$ \emph{Fact 4:} For any $p_1,p_2,p_3,p_4$ combination that survives the expectation in \eqref{eq:ksquareexpect} can be written as 
+
+\begin{align*}
+&\bigg(x(\I_0(p_1),s)A_0(s,p_1)x(\I_0(p_2),s')A_0(s',p_2)x(\I_0(p_3),s)\\
+&A_0(s,p_3)x(\I_0(p_4),s')A_0(s',p_4)\bigg)\times\\
+&\bigg( \underset{l\neq l'(m)} {\underset{l\neq l'(m')}{\underset{l=1}{\overset{d-1}{\Pi}}}} \mathbb{E}[\Tb_0(l,\I_{l-1}(p_1),\I_{l}(p_1)) \Tb_0(l,\I_{l-1}(p_2),\I_{l}(p_2))\nn\\
+&\Tb_0(l,\I_{l-1}(p_3),\I_{l}(p_3)) \Tb_0(l,\I_{l-1}(p_4),\I_{l}(p_4))] \bigg)\times\nn\\
+&\bigg( \E{\Tb_0(l,\I_{l'(m')-1}(p_1),\I_{l'(m')}(p_1)) \Tb_0(l,\I_{l'(m')-1}(p_2),\I_{l'(m')}(p_2))}\bigg)\times\nn\\
+&\bigg(\E{\Tb_0(l,\I_{l'(m)-1}(p_3),\I_{l'(m)}(p_3)) \Tb_0(l,\I_{l'(m)-1}(p_4),\I_{l'(m)}(p_4))} \bigg)\nn\\
+%&=\\
+%&\bigg( \underset{l\neq l'(m)} {\underset{l\neq l'(m')}{\underset{l=1}{\overset{d-1}{\Pi}}}} \Tb^2_0(l,\I_{l-1}(\rho_a),\I_{l}(\rho_a)) \Tb^2_0(l,\I_{l-1}(\rho_b),\I_{l}(\rho_b)) \bigg)\times \bigg( \Tb^2_0(l,\I_{l'(m')-1}(\rho_a),\I_{l'(m')}(\rho_a))\bigg)\nn\\
+%&\times \bigg({\Tb^2_0(l,\I_{l'(m)-1}(\rho_b),\I_{l'(m)}(\rho_b))} \bigg),
+\end{align*}
+
+where $\rho_a\rsa \theta(m)$ and $\rho_b\rsa \theta(m')$ are what we call as \emph{base} (case) paths. 
+
+
+$\bullet$ \emph{Fact 5:} For any given base paths $\rho_a$ and $\rho_b$ there could be multiple assignments possible for $p_1,p_2,p_3,p_4$.
+
+$\bullet$ \emph{Fact 6:}  Terms in \eqref{eq:ksquareexpect}, wherein, the base case is generated as $p_1=p_2=\rho_a$ and $p_3=p_4=\rho_b$ (or $p_1=p_2=\rho_b$ and $p_3=p_4=\rho_a$), get cancelled with the corresponding terms in \eqref{eq:kexpectsquare}.
+
+$\bullet$ \emph{Fact 7:}  When the bases paths $\rho_a$ and $\rho_b$ do not intersect (i.e., do not pass through the same weight in any one of the layers), the only possible assignment is $p_1=p_2=\rho_a$ and $p_3=p_4=\rho_b$ (or $p_1=p_2=\rho_b$ and $p_3=p_4=\rho_a$), and such terms are common in \eqref{eq:ksquareexpect} and \eqref{eq:kexpectsquare}, and hence do not show up in the variance term.
+
+
+$\bullet$ \emph{Fact 7:} Let base paths $\rho_a$ and $\rho_b$ intersect/cross at layer $l_1, \ldots, l_k, k \in [d-1]$, and let $\rho_a=(\rho_a(1),\ldots,\rho_a(k+1))$ where $\rho_a(1)$ is a sub-path string from layer $1$ to $l_1$, and $\rho_a(2)$ is the sub-path string from layer $l_1+1$ to $l_2$ and so on, and $\rho_a(k+1)$ is the sub-path string from layer $l_k+1$ to the output node. Then the set of paths that can occur in $\E{K_0(s,s')^2}$ are of the form:
+\begin{enumerate}
+\item $p_1=p_2=\rho_a, p_3=p_4=\rho_b$ (or $p_1=p_2=\rho_b, p_3=p_4=\rho_a$) which get cancelled in the $\E{K_0(s,s')}^2$ term.
+\item $p_1=\rho_a$, $p_3=\rho_b$, $p_2=(\rho_b(1),\rho_a(2),\rho_a(3),\ldots,\rho_a(k+1))$, $p_4=(\rho_a(1),\rho_b(2),\rho_b(3),\ldots,\rho_b(k+1))$, which are obtained by \emph{splicing} the base paths in various combinations. Note that for such spliced paths $p_1\neq p_2$ and $p_3\neq p_4$ and hence do not occur in the expression for $\E{K_0(s,s')}^2$ in \eqref{eq:kexpectsquare}.
+\end{enumerate}
+
+
+$\bullet$ \emph{Fact 8:} For $k$ crossings of the base paths there are $4^{k+1}$ splicings possible, and those many terms are extra in the $\E{K_0(s,s')^2}$ expression in \eqref{eq:ksquareexpect}, when compared to the $\E{K_0(s,s')}^2$ expression in \eqref{eq:kexpectsquare}. 
+
+\textbf{Upper Bound:} We now enumerate various possible crossings of the base paths, and calculate an upper bound for the magnitude of the contribution of `spliced' terms to the variance term using the \emph{Fact 1} to \emph{Fact 8}. In short, we find an upper bound for the those terms that do not get cancelled in the variance calculation. Further, without loss of generality we drop $x(\I_0(p))$ and $A(\cdot,\cdot)$ terms in this upper bound calculation.
+
+\begin{tabular}{|c|c|}\hline
+Architecture& Constant \\\hline
+FC-DNN&	$\cfc=\din^2 d^2\sigma^{4(d-1)}$\\\hline
+CNN& $\ccnn=\din^2 d^2\sigma^{4(d-1)}\wconv$\\\hline
+ResNet & $\cres=\din^2\left(\sum_{i=0}^b \binom{b}{i} (i+2) d_{\text{block}}\sigma^{2((i+2) d_{\text{block}}-1)} \right)^2$\\\hline
+\end{tabular}
 \FloatBarrier
 \begin{table}[h]
-\centering
-\begin{tabular}{| l |  l  |}\hline
-Layer&  Memorisation Network\\\hline
-Input  &$z_{\Theta}(0)=1$ \\
-Pre-Activation & $q_{s,\Theta}(l)=\sum_{j}\Theta(i,j,l)\cdot z_{s,\Theta}(j,l-1)$\\
-Hidden & $z_{s,\Theta}(i,l)=q_{s,\Theta}(i,l)\cdot G_{s}(i,l)$ \\
-Final  Output & $\hat{y}_{\Theta}(s)=\sum_{j} \Theta(1,j,d) \cdot z_{s,\Theta}(j,d-1)$\\\hline
+\begin{tabular}{|c|l|c|c|c|}\hline
+Case &Crossing					&FC-DNN 					&CNN 									&ResNet\\\hline
+1& $1$ F or $1$ L				&$\frac{2\cdot6^2\cfc}{w}$  		&$\frac{2\cdot6^2\ccnn}{w}$ 			&$\frac{2\cdot6^2\cres}{w}$\\\hline
+2& $1$ M					&$\frac{36 d\cfc }{w^2}$  			&$\frac{36 d\ccnn}{w^2}$ 						&$\frac{36 d \cres}{w^2}$\\\hline
+3& $1$ F and $1$ L				&$\frac{6^3\cfc}{\din w^2}$  		&$\frac{6^3\ccnn}{\din\wconv w^2}$ 	&$\frac{6^3\cres}{\din w^2}$\\\hline
+4& $1$ F or $1$ L and $1$ M		&$\left(\frac{6d}{w^2}\right)\left(\frac{2\cdot6^2\cfc}{w}\right)$ &$\left(\frac{6d}{w^2}\right)\left(\frac{2\cdot6^2\ccnn}{w}\right)$  &$\left(\frac{6d}{w^2}\right)\left(\frac{2\cdot6^2\cres}{w}\right)$\\\hline
+5& $2$ M 					&$\left(\frac{6d}{w^2}\right)\left(\frac{36 d\cfc }{w^2}\right)$  			&$\left(\frac{6d}{w^2}\right)\left(\frac{36 d\ccnn}{w^2}\right)$ 						&$\left(\frac{6d}{w^2}\right)\left(\frac{36 d \cres}{w^2}\right)$\\\hline
+6& $1$ F or $1$ L and $2$ M		&$\left(\frac{6d}{w^2}\right)^2\left(\frac{2\cdot6^2\cfc}{w}\right)$ &$\left(\frac{6d}{w^2}\right)^2\left(\frac{2\cdot6^2\ccnn}{w}\right)$  &$\left(\frac{6d}{w^2}\right)^2\left(\frac{2\cdot6^2\cres}{w}\right)$\\\hline
+7& $1$ F and $1$ L and $1$ M 		&$\left(\frac{6d}{w^2}\right)\left(\frac{6^3\cfc}{\din w^2}\right)$  		&$\left(\frac{6d}{w^2}\right)\left(\frac{6^3\ccnn}{\din \wconv w^2}\right)$ 	&$\left(\frac{6d}{w^2}\right)\left(\frac{6^3\cres}{\din w^2}\right)$\\\hline
+8& $3$M 					&$\left(\frac{6d}{w^2}\right)^2\left(\frac{36 d\cfc }{w^2}\right)$  			&$\left(\frac{6d}{w^2}\right)^2\left(\frac{36 d\ccnn}{w^2}\right)$ 						&$\left(\frac{6d}{w^2}\right)^2\left(\frac{36 d \cres}{w^2}\right)$\\\hline
+Total & Cases 1+4+6+$\ldots$ &$\frac{\cfc}{w}\left(\frac{\cfc'}{1-6dw^{-2}}\right)$ &$\frac{\ccnn}{w}\left(\frac{\ccnn'}{1-6dw^{-2}}\right)$& $\frac{\cres'}{w}\left(\frac{\cres}{1-6dw^{-2}}\right)$\\\hline
+Total & Cases 3+7+$\ldots$ &$\frac{d\cfc}{w^2}\left(\frac{\cfc''}{1-6dw^{-2}}\right)$ &$\frac{d\ccnn}{w^2}\left(\frac{\ccnn''}{1-6dw^{-2}}\right)$& $\frac{d\cres}{w^2}\left(\frac{\cres''}{1-6dw^{-2}}\right)$\\\hline
+Total & Cases 2+4+6+$\ldots$ &$\frac{\cfc}{w^2}\left(\frac{\cfc'''}{1-6dw^{-2}}\right)$ &$\frac{\ccnn}{w^2}\left(\frac{\ccnn'''}{1-6dw^{-2}}\right)$& $\frac{\cres}{w^2}\left(\frac{\cres'''}{1-6dw^{-2}}\right)$\\\hline
 \end{tabular}
-\caption{ Memorisation Network. The input is fixed and is equal to $1$. All the internal variables depend on the index $s$ and the parameter $\Theta$. The gating values $G_s(i,l)$ are external and independent variables.}
-\label{tb:dgnmemo}
+\caption{Here `F', `M' and `L' stand for \emph{first, middle} and \emph{last} layers respectively, where middle layer is any layer that is not the first or the last. $1$ F or $1$ L means, $k=1$ crossing of the base paths either in the first or the last layer. $1$ F and $1$ L means $k=2$ crossings of the base paths one in the first layer and the other in the last layer. Similarly $3$ M means, $k=3$ crossings of the base paths, all in the middle (i.e., intermediate) layers.} 
 \end{table}
+The cases can be extended in a similar way, increasing the number of crossings.  Now, assuming $\frac{6d}{w^2}<1$, the bounds in the various terms can be lumped together as below:
 
-\textbf{Fixed Random Gating:} The memorisation network is described in \Cref{tb:dgnmemo}. In a memorisation network, the gates are \emph{fixed and random}, i.e., for each index $s\in[n]$, the gating values $G_{s}(i,l),\forall l\in[d-1], i\in[w] $ are sampled from $Ber(\mu), \mu\in(0,1)$ taking values in $\{0,1\}$,  and kept fixed throughout training. The input to the memorisation network is fixed as $1$, and since the gating is fixed and random there is a separate random sub-network to memorise each target $y_s\in\R$. The memorisation network can be used to memorise the targets  $(y_s)_{s=1}^n$ by training it using gradient descent by minimising the squared loss $L_{\Theta}$. In what follows, we let $K_0$ and $H_0$ to be the NTK and NPK of the memorisation network at initialisation.
-
-
-\textbf{Performance of Memorisation Network:} From \Cref{prop:basic} we know that as $w\ra\infty$, the training error dynamics of the memorisation network follows:
-\begin{align}
-\dot{e}_t=-K_{0} e_t,
-\end{align}
-i.e., the spectral properties of $K_0$ (or $H_0$) dictates the rate of convergence of the training error to $0$. In the case of the memorisation network with fixed and random gates, we can calculate $\E{K_0}$ explicitly. 
-
-\textbf{Spectrum of $H_0$:} The input Gram matrix $\Sigma$ is a $n\times n$ matrix with all entries equal to $1$ and its rank is equal to 1, and hence $H_0=\Lambda_0$. We can now calculate the properties of $\Lambda_0$. It is easy to check that $\mathbb{E}_{\mu}\left[\Lambda_0(s,s)\right]=(\mu w)^{(d-1)},\forall s\in[n]$ and $\mathbb{E}_{\mu}\left[\Lambda_0(s,s')\right]=(\mu^2 w)^{(d-1)},\forall s,s'\in[n]$.  For $\sigma=\sqrt{\frac{1}{\mu w}}$, and $\mathbb{E}_{\mu}\left[K_0(s,s)/d\right]=1$, and $\mathbb{E}_{\mu}\left[K_0(s,s')/d\right]=\mu^{(d-1)}$. 
-\begin{figure}
-\centering
-\includegraphics[scale=0.3]{figs/dgn-fra-ecdf-ideal-small.png}
-\caption{Ideal spectrum of $\E{K_0}/d$ for a memorisation network for $n=200$.}
-\label{fig:ideal-spectrum}
-\end{figure}
-
-
-\textbf{Why increasing depth till a point helps ?} 
-We have:
-%\comment{
-\begin{align}\label{eq:mat}
-\frac{\E{K_0}}{d}=\left[\begin{matrix}
-1 &\mu^{d-1} &\ldots &\mu^{d-1} &\ldots\\ 
-\ldots &1 &\ldots &\mu^{d-1} &\ldots\\ 
-\ldots &\mu^{d-1} &\ldots &1 &\ldots \\
-\ldots &\mu^{d-1} &\ldots &\mu^{d-1} &1\\ 
-\end{matrix}\right]
-\end{align}
-%}
-i.e., all the diagonal entries are $1$ and non-diagonal entries are $\mu^{d-1}$. Now, let $\rho_i\geq 0,i \in [n]$ be the eigenvalues of $\frac{\E{K_0}}{d}$, and let $\rho_{\max}$ and $\rho_{\min}$ be the largest and smallest eigenvalues.  One can easily show that $\rho_{\max}=1+(n-1)\mu^{d-1}$ and corresponds to the eigenvector with all entries as $1$, and $\rho_{\min}=(1-\mu^{d-1})$ repeats $(n-1)$ times,  which corresponds to eigenvectors given by $[0, 0, \ldots, \underbrace{1, -1}_{\text{$i$ and $i+1$}}, 0,0,\ldots, 0]^\top \in \R^n$ for $i=1,\ldots,n-1$. Note that as $d\ra\infty$, $\rho_{\max},\rho_{\min}\ra 1$.
-
-\textbf{Why increasing depth beyond a point hurts?} 
-As the depth increases the variance of the entries $K_0(s,s')$ deviates from its expected value $\E{K_0(s,s')}$. Thus the structure of the Gram matrix degrades from \eqref{eq:mat}, leading to smaller eigenvalues.
-%\FloatBarrier
-\begin{figure}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{cccc}
-\includegraphics[scale=0.5]{figs/dgn-fra-ecdfbyd-w25.png}
-&
-\includegraphics[scale=0.5]{figs/dgn-fra-conv-w25.png}
-&
-\includegraphics[scale=0.5]{figs/dgn-fra-ecdfbyd-w500.png}
-&
-\includegraphics[scale=0.5]{figs/dgn-fra-conv-w500.png}
-\end{tabular}
-}
-\caption{Shows the plots for the memorisation network with $\mu=\frac{1}{2}$ and $\sigma=\sqrt{\frac{2}{w}}$. The number of points to be memorised is $n=200$. The left most plot shows the e.c.d.f for $w=25$ and the second plot from the left shows the error dynamics during training for $w=25$. The second plot from the right shows the e.c.d.f for $w=500$ and the right most plot shows the error dynamics during training for $w=500$. All plots are averaged over $10$ runs.}
-\label{fig:dgn-frg-gram-ecdf}
-\end{figure}
-
-\subsection{Experiment}
-We set $n=200$, and $y_s\sim\text{Uniform}[-1,1]$. We look at the cumulative eigenvalue (e.c.d.f) obtained by first sorting the eigenvalues in ascending order then looking at their cumulative sum. The ideal behaviour (\Cref{fig:ideal-spectrum}) as predicted from theory is that for indices $k\in[n-1]$, the e.c.d.f should increase at a linear rate, i.e., the cumulative sum of the first $k$ indices is equal to $k(1-\mu^{d-1})$, and the difference between the last two indices is $1+(n-1)\mu^{d-1}$. In \Cref{fig:dgn-frg-gram-ecdf}, we plot the actual e.c.d.f for various depths $d=2,4,6,8,12,16,20$ and $w=25,500$ (first and third plots from the left in \Cref{fig:dgn-frg-gram-ecdf}). 
-
-\textbf{Roles of depth and width:} In order to compare how the rate of convergence varies with the depth, we set the step-size $\alpha=\frac{0.1}{\rho_{\max}}$, $w=100$. We use the vanilla SGD-optimiser. Note the$ \frac{1}{\rho_{\max}}$ in the stepsize, ensures that the uniformity of maximum eigenvalue across all the instances, and the convergence should be limited by the smaller eigenvalues. We also look at the convergence rate of the ratio $\frac{\norm{e_t}^2_2}{\norm{e_0}^2_2}$. We notice that for $w=25$, increasing depth till $d=8$ improves the convergence, however increasing beyond $d=8$ worsens the convergence rate. For $w=500$, increasing the depth till $d=12$ improves convergence, and $d=16,20$ are worse than $d=12$.  %This matches with the depth phenomena observed in practical DNNs and also matches our theory.
+Putting together we have the variance to be bounded by 
+\begin{align*}
+\cfc\cdot\max\left\{\cfc^{(1)}\cdot\left(\frac{1}{w}\right),\cfc^{(2)}\cdot\left(\frac{d}{w^2}\right)\right\}, \\
+\ccnn\cdot\max\left\{\ccnn^{(1)}\cdot\left(\frac{1}{w}\right),\ccnn^{(2)}\cdot\left(\frac{d}{w^2}\right)\right\}, \\
+\cres\cdot\max\left\{\cres^{(1)}\cdot\left(\frac{1}{w}\right),\cres^{(2)}\cdot\left(\frac{d}{w^2}\right)\right\}, 
+\end{align*}
+respectively for FC-DNN, CNN and ResNet. Here, $\cfc^{(i)},\ccnn^{(i)},\cres^{(i)},i=1,2$ are positive constants.
+\end{proof}
+\end{comment}
 \end{appendix}
