@@ -50,7 +50,7 @@ Index maps identify the nodes through which a path $p$ passes. The ranges of ind
 
 (iii)  $v_{\Theta}\eqdef \left( \Pi_{l=1}^d \Theta(\I_{l-1}(p),\I_l(p),l), p\in[\Pfc]\right)\in\R^{\Pfc}$ is the {neural path value} (NPV).
 \end{definition}
-\textbf{Remark:} A coordinate of NPF can be non-zero only if the corresponding path is active ($A_{\Theta}(x,p)=1$), which happens only if all the gates in the path are $1$. 
+\textbf{Remark:} $\Ifeat_0(p)$ denotes the input node of path $p$. A coordinate of NPF can be non-zero only if the corresponding path is active ($A_{\Theta}(x,p)=1$), i.e., all the gates in the path are $1$. 
 \begin{proposition}\label{prop:zero}  The output of the DNN can be written as an inner product of the NPF and NPV, i.e., 
 $\hat{y}_{\Theta}(x)=\ip{\phi_{x,\Theta},v_{\Theta}}=\sum_{p\in [\Pfc]}x(\Ifeat_0(p))A_{\Theta}(x,p)v_{\Theta}(p)$.
 \end{proposition}

@@ -9,7 +9,7 @@ In this section, we show that in the presence of skip connections, NPK has a sum
 \label{fig:resnet}
 \end{figure}
 \begin{definition}\label{def:subfcdnn}[Sub FC-DNNs]
-Let $2^{[b]}$ denote the power set of $[b]$ and let $\J\in 2^{[b]}$ denote any subset of $[b]$. Define the`$\J^{th}$' sub-FC-DNN of the ResNet to be the fully connected network obtained by (i) ignoring/removing (see \Cref{fig:resnet}) the skip connections $\text{skip}_j,\forall j\in \J$  and (ii) ignoring $\text{block}_{j},\forall j\notin \J$ (see \Cref{fig:resnet,fig:subfcdnn}).
+Let $2^{[b]}$ denote the power set of $[b]$ and let $\J\in 2^{[b]}$ denote any subset of $[b]$. Define the`$\J^{th}$' sub-FC-DNN of the ResNet to be the fully connected network obtained by (i) ignoring/removing the skip connections $\text{skip}_j,\forall j\in \J$  and (ii) ignoring $\text{block}_{j},\forall j\notin \J$ (see \Cref{fig:resnet,fig:subfcdnn}).
 \end{definition}
 %\Cref{fig:subfcdnn} shows the $4$ sub-FC-DNNs namely $H^i,i=1,2,3,4$ in the case of $b=2$ skip connections.
 \FloatBarrier
