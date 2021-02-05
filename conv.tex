@@ -12,7 +12,7 @@
 %\subsection{Circular Convolution With Pooling}
 In this section, we define NPFs and NPV in the presence of convolution with pooling. This requires three key steps (i) treating pooling layers like gates/masks (\Cref{def:pooling}) (ii) bundling together the paths that share the same path value (due to weight sharing in convolutions) \Cref{def:bundle}, and (iii) re-defining the NPF and NPV for bundles \Cref{def:convnps}. Weight sharing due to convolutions and pooling makes the NPK rotationally invariant \Cref{lm:cnnnpk}.
 
-We consider (for sake of brevity) a $1$-dimensional\footnote{The results follow in a direct manner to any form of circular convolutions.} convolutional neural network with circular convolutions (see \Cref{tb:cconv} for primal view of information flow), with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer as well as the width of the FC is $w$. 
+We consider (for sake of brevity) a $1$-dimensional\footnote{The results follow in a direct manner to any form of circular convolutions.} convolutional neural network with circular convolutions (see \Cref{tb:cconv} in Appendix for primal view of information flow), with $\dc$ convolutional layers ($l=1,\ldots,\dc$), followed by a \emph{global-average/max-pooling} layer ($l=\dc+1$) and $\dfc$ ($l=\dc+2,\ldots,\dc+\dfc+1$) FC  layers. The convolutional window size is $\wconv<\din$, the number of filters per convolutional layer as well as the width of the FC is $w$. 
 
 \begin{definition}[Circular Convolution]
 For $x\in\R^{\din}$, $i\in[\din]$ and $r\in\{0,\ldots,\din-1\}$, define :
