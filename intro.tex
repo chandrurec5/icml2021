@@ -6,7 +6,7 @@ At the centre of this question is the lack of \emph{pedagogical nuggets} of ``si
 
 Recent works by \citet{arora2019exact, ntk,cao2019generalization} have shown that training an infinite width DNN is equivalent to a kernel method with the so called limiting \emph{neural tangent kernel} (NTK) matrix. \citet{arora2019exact} showed that the limiting Convolutional NTK (CNTK) corresponding to a convolutional neural network (CNN) beats other pure kernel based methods. However, the CNN still outperforms the CNTK by $5-6\%$. So, the NTK does not fully explain the success of finite width DNNs. Also, it is not known why depth and pooling helps both the CNTK as well the CNN \cite{arora2019exact}.
 
-Recently, \citet{npk} developed a dual view for DNNs with ReLUs to study the role of gates. In the dual view, the computations are broken down \emph{path-by-path} as opposed to the primal view where the computations proceed \emph{layer-by-layer}. This provides a \emph{sub-network} based interpretation for DNNs: each input has a corresponding \emph{active sub-network} comprising of the gates that are \emph{on} and weights through such gates, that produces the output. They also showed via theory and experiments that most information is stored in the gates (\emph{on/off} states of ReLU). The highlights are presented in the bulleted points below.
+Recently, \citet{npk} developed a dual view for DNNs with ReLUs to study the role of gates. In the dual view, the computations are broken down \emph{path-by-path} as opposed to the primal view where the computations proceed \emph{layer-by-layer}. This provides a \emph{sub-network} based interpretation for DNNs: each input has a corresponding \emph{active sub-network} comprising of the gates that are \emph{on} and weights through such gates, that produces the output. They also showed via theory and experiments that most information is stored in the gates (\emph{on/off} states of ReLU). The highlights are presented below (see also \Cref{fig:related}).
 
 $\bullet$ \emph{Theory:} In the limit of infinite width, weights initialised statistically independent of arbitrary gates, the NTK is equal (up to a scaling constant) to the \emph{neural path kernel} (NPK), a kernel solely dependent on the information in the gates. %\emph{Hadamard} product of Gram matrix and a correlation matrix that measures the amount overlap in the active sub-networkss for the various pairs input examples.
 
@@ -68,7 +68,7 @@ The NTK performs better than the CK as well as other prior pure kernel based met
 \resizebox{\columnwidth}{!}{
 \includegraphics[scale=0.25]{figs/related.pdf}
 }
-\caption{This paper in relation to (i) NTK, (ii) Duality.}
+\caption{This paper in relation to (i) NTK and (ii) Duality.}
 \label{fig:related}
 \end{figure}
 
@@ -106,7 +106,7 @@ $2.$ \emph{Learning in gates} is the difference between finite width DNN and the
 \label{fig:related}
 \end{figure}
 
- In this paper, we simplify the NPK into \emph{atomic} units to explain roles of width, depth, skip connections and convolutions with pooling. Our novel contributions are as under.
+ In this paper (see \Cref{fig:related}), we simplify the NPK into \emph{atomic} units to explain roles of width, depth, skip connections and convolutions with pooling. Novel contributions  are as under.
 
 \begin{comment}
 \begin{table}
